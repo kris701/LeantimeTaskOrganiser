@@ -1,0 +1,21 @@
+{
+    "name": "TaskOrganiser",
+    "description": "Tmp",
+    "version": "0.1",
+    "screenshot": "",
+    "authors": [
+        {
+            "name": "Kristian",
+            "email": "kris701kj@gmail.com"
+        }
+    ],
+    "homepage": "https://leantime.io",
+    "type": "leantime-plugin",
+    "keywords": [
+        ""
+    ],
+    "license": "Apache-2.0",
+    "require": {
+        "leantime/leantime": "3.0"
+    }
+}

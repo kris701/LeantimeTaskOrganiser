@@ -29,23 +29,19 @@ class TaskOrganiserWidget extends HtmxController
             throw new Error('This endpoint only supports GET requests!');
         }
 
+        $params = $this->incomingRequest->query->all();
+
         $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.mytaskorganisersorting";
-        $sorting = $this->settingsService->getSetting($sortingKey);
+        $searchCriteria = array(
+            "status"=>"1,2,3,4",
+            "type"=>"task"
+        );
+        $relevantTasks = $this->ticketsService->getAll($searchCriteria);
+	
+        // Do whatever with the tasks here
 		
-		$params = $this->incomingRequest->query->all();
-		
-		$this->tpl->assign('allTickets', $this->ticketsService->getAll());
+        // Return needed items
+		$this->tpl->assign('allTickets', $relevantTasks);
+		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 	}
-
-    public function saveSorting(){
-        if (! $this->incomingRequest->getMethod() == 'POST') {
-            throw new Error('This endpoint only supports POST requests!');
-        }
-
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.mytaskorganisersorting";
-
-        $this->settingsService->saveSetting($sortingKey, json_encode($taskList));
-    }
 }

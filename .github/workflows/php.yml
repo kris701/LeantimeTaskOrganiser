@@ -47,15 +47,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup PHP with PECL extension
-      uses: shivammathur/setup-php@v2
+    - name: Zip Release Code
+      uses: montudor/action-zip@v1
       with:
-        php-version: '8.4'
-
-    - name: Create publish file
-      run: |
-        composer require --dev clue/phar-composer
-        php phar-composer build ~/TaskOrganiser
+        args: zip -qq -r release.zip TaskOrganiser
 
     - name: Generate tag
       continue-on-error: true
@@ -69,5 +64,5 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         skipIfReleaseExists: true
-        artifacts: "./build/*"
+        artifacts: "release.zip"
         tag: "${{needs.build.outputs.version}}"

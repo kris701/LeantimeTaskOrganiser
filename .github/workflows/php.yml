@@ -54,13 +54,10 @@ jobs:
       with:
         args: zip -qq -r release.zip TaskOrganiser
 
-    - name: Generate tag
-      continue-on-error: true
-      uses: rickstaa/action-create-tag@v1
-      id: "tag_create"
+    - name: Create Tag
+      uses: jaywcjlove/create-tag-action@main
       with:
-        tag: "${{needs.build.outputs.version}}"
-        message: "Latest release"
+        version: "${{needs.build.outputs.version}}"
 
     - name: Generate Release
       uses: ncipollo/release-action@v1
@@ -68,3 +65,4 @@ jobs:
         skipIfReleaseExists: true
         artifacts: "release.zip"
         tag: "${{needs.build.outputs.version}}"
+        generateReleaseNotes: true

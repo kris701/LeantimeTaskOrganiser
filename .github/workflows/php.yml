@@ -1,0 +1,73 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-current-version.outputs.group1 }}
+      release: ${{ steps.get-release-version.outputs.release }}
+    name: Build
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: "Read file contents"
+      id: read_file
+      uses: satya-500/read-file-github-action@v1.0.0
+      with:
+        path: "TaskOrganiser/composer.json"
+
+    - uses: actions-ecosystem/action-regex-match@v2.0.2
+      name: Get Current Version
+      id: get-current-version
+      with:
+        text: ${{ steps.read_file.outputs.contents }}
+        regex: '"version": "([^"]*)'
+        flags: gm
+
+    - name: Get Release version
+      id: get-release-version
+      uses: pozetroninc/github-action-get-latest-release@master
+      with:
+        repository: ${{ github.repository }}
+
+  createRelease:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Build and Create Release
+    if: ${{needs.build.outputs.version != needs.build.outputs.release}}
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP with PECL extension
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+
+    - name: Create publish file
+      run: |
+        curl -JOL https://clue.engineering/phar-composer-latest.phar
+        php phar-composer build ~/TaskOrganiser
+
+    - name: Generate tag
+      continue-on-error: true
+      uses: rickstaa/action-create-tag@v1
+      id: "tag_create"
+      with:
+        tag: "${{needs.build.outputs.version}}"
+        message: "Latest release"
+
+    - name: Generate Release
+      uses: ncipollo/release-action@v1
+      with:
+        skipIfReleaseExists: true
+        artifacts: "./build/*"
+        tag: "${{needs.build.outputs.version}}"

@@ -54,7 +54,7 @@ jobs:
 
     - name: Create publish file
       run: |
-        curl -JOL https://clue.engineering/phar-composer-latest.phar
+        composer require --dev clue/phar-composer
         php phar-composer build ~/TaskOrganiser
 
     - name: Generate tag

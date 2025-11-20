@@ -1,7 +1,7 @@
 {
     "name": "TaskOrganiser",
-    "description": "Tmp",
-    "version": "0.1",
+    "description": "Simple plugin for Leantime to automatically organise todays todo tasks.",
+    "version": "v0.1.0",
     "screenshot": "",
     "authors": [
         {
@@ -9,7 +9,7 @@
             "email": "kris701kj@gmail.com"
         }
     ],
-    "homepage": "https://leantime.io",
+    "homepage": "https://github.com/kris701/LeantimeTaskOrganiser",
     "type": "leantime-plugin",
     "keywords": [
         ""

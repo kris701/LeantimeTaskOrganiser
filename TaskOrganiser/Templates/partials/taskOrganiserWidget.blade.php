@@ -1,8 +1,3 @@
-@props([
-    'includeTitle' => true,
-    'onTheClock' => false,
-])
-
 <div id="taskOrganiserBody"
 	class="tw-w-full tw-h-full tw-overflow-x-hidden"
 	hx-get="{{BASE_URL}}/taskOrganiser/taskOrganiserWidget/get"
@@ -52,11 +47,4 @@
 			x.style.cursor = "default"
 		})
 	})
-
-	jQuery('.dropdown-item').each(function() {
-		let current = jQuery(this);
-		current.click(function() {
-			htmx.trigger('#taskOrganiserBody', 'onReloadView');
-		})
-	});
 </script>

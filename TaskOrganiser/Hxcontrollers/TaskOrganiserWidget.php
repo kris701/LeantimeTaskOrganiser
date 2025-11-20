@@ -39,9 +39,20 @@ class TaskOrganiserWidget extends HtmxController
         $relevantTasks = $this->ticketsService->getAll($searchCriteria);
 	
         // Do whatever with the tasks here
+        usort($relevantTasks, function ($a, $b) {
+            if ($a['priority'] == $b['priority'])
+                return -1;
+            else if ($a['priority'] == "" && $b['priority'] != "")
+                return 1;
+            else if ($a['priority'] != "" && $b['priority'] == "")
+                return -1;
+            return intval($a['priority']) - intval($b['priority']);
+        });
 		
         // Return needed items
 		$this->tpl->assign('allTickets', $relevantTasks);
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
+		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());
+		$this->tpl->assign('priorityLabels', $this->ticketsService->getPriorityLabels());
 	}
 }

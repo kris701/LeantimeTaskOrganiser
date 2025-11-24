@@ -1,16 +1,10 @@
 <?php
 
 use Leantime\Core\Events\EventDispatcher;
-use Leantime\Plugins\TaskOrganiser\Listeners\TaskOrganiserSettingsTab;
-use Leantime\Plugins\TaskOrganiser\Listeners\TaskOrganiserSettingsTabContent;
+use Leantime\Plugins\TaskOrganiser\Listeners\SettingsTab;
+use Leantime\Plugins\TaskOrganiser\Listeners\SettingsTabContent;
 
-function addTaskOrganiserLink($menuStructure, $params)
-{    
-    return $menuStructure;
-}
-EventDispatcher::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTaskOrganiserLink');
-
-function addTaskOrganiserWidget($availableWidgets)
+function addWidget($availableWidgets)
 {
     $moduleManager = app()->make(\Leantime\Domain\Modulemanager\Services\Modulemanager::class);
     if ($moduleManager->isModuleAvailable('taskOrganiser')) {
@@ -26,15 +20,15 @@ function addTaskOrganiserWidget($availableWidgets)
             'gridX' => 8,
             'gridY' => 45,
             'alwaysVisible' => false,
-            'widgetUrl' => BASE_URL.'/taskOrganiser/taskOrganiserWidget/get',
+            'widgetUrl' => BASE_URL.'/taskOrganiser/widgetController/get',
         ]);
     }
 
     return $availableWidgets;
 }
-EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.availableWidgets', 'addTaskOrganiserWidget');
+EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.availableWidgets', 'addWidget');
 
-function addDefaultTaskOrganiserWidget($defaultWidgets, $params)
+function addDefaultWidget($defaultWidgets, $params)
 {
     $moduleManager = app()->make(\Leantime\Domain\Modulemanager\Services\Modulemanager::class);
     if ($moduleManager->isModuleAvailable('taskOrganiser')) {
@@ -44,8 +38,7 @@ function addDefaultTaskOrganiserWidget($defaultWidgets, $params)
 
     return $defaultWidgets;
 }
+EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.defaultWidgets', 'addDefaultWidget');
 
-EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.defaultWidgets', 'addDefaultTaskOrganiserWidget');
-
-EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabs', TaskOrganiserSettingsTab::class);
-EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabsContent', TaskOrganiserSettingsTabContent::class);
+EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabs', SettingsTab::class);
+EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabsContent', SettingsTabContent::class);

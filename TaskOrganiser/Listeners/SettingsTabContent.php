@@ -4,7 +4,7 @@ namespace Leantime\Plugins\TaskOrganiser\Listeners;
 
 use Leantime\Core\UI\Template;
 
-class TaskOrganiserSettingsTabContent
+class SettingsTabContent
 {
     public function __construct(
         protected Template $template) {}

@@ -6,9 +6,9 @@ use Leantime\Core\Controller\HtmxController;
 use Leantime\Domain\Setting\Services\Setting;
 use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 
-class TaskOrganiserWidget extends HtmxController
+class WidgetController extends HtmxController
 {
-    protected static string $view = 'taskorganiser::partials.taskOrganiserWidget';
+    protected static string $view = 'taskorganiser::partials.widget';
 
     private TicketService $ticketsService;
 

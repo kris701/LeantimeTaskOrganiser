@@ -2,7 +2,7 @@
 
 namespace Leantime\Plugins\TaskOrganiser\Listeners;
 
-class TaskOrganiserSettingsTab
+class SettingsTab
 {
     public function handle($payload): void
     {

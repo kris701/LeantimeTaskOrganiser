@@ -12,7 +12,7 @@
 		</div>
 	</div>
 	<div id="ticketOrganiserContainer">
-		@foreach ($allTickets as $ticket)
+		@foreach ($globalTasks as $ticket)
 			<div class="ticketBox" style="cursor:default">
 				<div class="tw-flex tw-flex-row" style="gap:1rem">
 					<div style="align-content:center">

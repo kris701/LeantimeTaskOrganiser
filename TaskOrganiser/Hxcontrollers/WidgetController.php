@@ -5,20 +5,28 @@ namespace Leantime\Plugins\TaskOrganiser\Hxcontrollers;
 use Leantime\Core\Controller\HtmxController;
 use Leantime\Domain\Setting\Services\Setting;
 use Leantime\Domain\Tickets\Services\Tickets as TicketService;
+use Leantime\Plugins\TaskOrganiser\Services\SortingService;
+use Leantime\Domain\Projects\Services\Projects as ProjectService;
+use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
 
 class WidgetController extends HtmxController
 {
     protected static string $view = 'taskorganiser::partials.widget';
 
+    private ProjectService $projectsService;
     private TicketService $ticketsService;
-
+    private SortingService $sortingService;
     private Setting $settingsService;
 
     public function init(
+        ProjectService $projectsService,
         TicketService $ticketsService,
+        SortingService $sortingService,
         Setting $settingsService,
     ) {
+        $this->projectsService = $projectsService;
         $this->ticketsService = $ticketsService;
+        $this->sortingService = $sortingService;
         $this->settingsService = $settingsService;
 
         session(['lastPage' => BASE_URL.'/dashboard/home']);
@@ -29,28 +37,13 @@ class WidgetController extends HtmxController
             throw new Error('This endpoint only supports GET requests!');
         }
 
-        $params = $this->incomingRequest->query->all();
-
         $userId = session('userdata.id');
-        $searchCriteria = array(
-            "status"=>"1,2,3,4",
-            "type"=>"task"
-        );
-        $relevantTasks = $this->ticketsService->getAll($searchCriteria);
-	
-        // Do whatever with the tasks here
-        usort($relevantTasks, function ($a, $b) {
-            if ($a['priority'] == $b['priority'])
-                return -1;
-            else if ($a['priority'] == "" && $b['priority'] != "")
-                return 1;
-            else if ($a['priority'] != "" && $b['priority'] == "")
-                return -1;
-            return intval($a['priority']) - intval($b['priority']);
-        });
+        $globalTasks = $this->sortingService->CalculateGlobal();
+        $todaysTasks = $this->sortingService->CalculateToday($globalTasks);
 		
         // Return needed items
-		$this->tpl->assign('allTickets', $relevantTasks);
+		$this->tpl->assign('globalTasks', $globalTasks);
+		$this->tpl->assign('todaysTasks', $todaysTasks);
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());
 		$this->tpl->assign('priorityLabels', $this->ticketsService->getPriorityLabels());

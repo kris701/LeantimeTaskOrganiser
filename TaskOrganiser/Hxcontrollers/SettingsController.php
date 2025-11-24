@@ -5,7 +5,6 @@ namespace Leantime\Plugins\TaskOrganiser\Hxcontrollers;
 use Leantime\Core\Controller\HtmxController;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
-
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 
 class SettingsController extends HtmxController
@@ -13,7 +12,6 @@ class SettingsController extends HtmxController
     protected static string $view = 'taskorganiser::partials.settings';
 
     private ProjectService $projectsService;
-
     private SettingService $settingsService;
 
     public function init(
@@ -41,11 +39,7 @@ class SettingsController extends HtmxController
             $projectId = $project['id'];
             $sortingKey = "user.{$userId}.taskorganisersettings.{$projectId}";
             $settingDataStr = $this->settingsService->getSetting($sortingKey);
-            $thisProjectSettings = json_decode($settingDataStr);
-            if ($settingDataStr == ''){
-                $thisProjectSettings = new SettingsModel;
-                $this->settingsService->saveSetting($sortingKey, json_encode($thisProjectSettings));
-            }
+            $thisProjectSettings = new SettingsModel($settingDataStr);
             $settings[$project['id']] = $thisProjectSettings;
         }
         
@@ -62,10 +56,10 @@ class SettingsController extends HtmxController
         $userId = session('userdata.id');
         $sortingKey = "user.{$userId}.taskorganisersettings.{$project}";
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $thisProjectSettings = json_decode($settingDataStr);
+        $thisProjectSettings = new SettingsModel($settingDataStr);
 
         $thisProjectSettings->globalWeight = intval($this->incomingRequest->get('globalWeight'));
 
-        $this->settingsService->saveSetting($sortingKey, json_encode($thisProjectSettings));
+        $this->settingsService->saveSetting($sortingKey, $thisProjectSettings->Serialize());
     }
 }

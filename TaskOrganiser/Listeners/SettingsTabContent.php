@@ -11,6 +11,6 @@ class SettingsTabContent
 
     public function handle($payload): void
     {
-        include __DIR__.'/../Templates/partials/settings.blade.php';
+        include __DIR__.'/../Templates/partials/settingsContainer.blade.php';
     }
 }

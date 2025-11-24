@@ -1,10 +1,14 @@
 <?php
 
+use Leantime\Core\Events\EventDispatcher;
+use Leantime\Plugins\TaskOrganiser\Listeners\TaskOrganiserSettingsTab;
+use Leantime\Plugins\TaskOrganiser\Listeners\TaskOrganiserSettingsTabContent;
+
 function addTaskOrganiserLink($menuStructure, $params)
 {    
     return $menuStructure;
 }
-\Leantime\Core\Events\EventDispatcher::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTaskOrganiserLink');
+EventDispatcher::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTaskOrganiserLink');
 
 function addTaskOrganiserWidget($availableWidgets)
 {
@@ -28,7 +32,7 @@ function addTaskOrganiserWidget($availableWidgets)
 
     return $availableWidgets;
 }
-\Leantime\Core\Events\EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.availableWidgets', 'addTaskOrganiserWidget');
+EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.availableWidgets', 'addTaskOrganiserWidget');
 
 function addDefaultTaskOrganiserWidget($defaultWidgets, $params)
 {
@@ -41,4 +45,7 @@ function addDefaultTaskOrganiserWidget($defaultWidgets, $params)
     return $defaultWidgets;
 }
 
-\Leantime\Core\Events\EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.defaultWidgets', 'addDefaultTaskOrganiserWidget');
+EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.defaultWidgets', 'addDefaultTaskOrganiserWidget');
+
+EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabs', TaskOrganiserSettingsTab::class);
+EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabsContent', TaskOrganiserSettingsTabContent::class);

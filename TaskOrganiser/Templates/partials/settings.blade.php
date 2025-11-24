@@ -1,22 +1,31 @@
-<div>
+<div id="settingsContainer">
     <p>Edit your settings for how the Task Organiser widget should work.</p>
-    @foreach ($projects as $project)
-        <div>
-            <details>
-                <summary>Settings for {{$project['name']}}</summary>
-                <form
-                    hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/save"
-                    hx-trigger="submit"
-                    hx-swap="none"
-                >
-                    <input type="hidden" value="{{ $project['id'] }}" name="project"/>
+    
+    @foreach ($settings->indexes as $setting)
+    <details>
+        <summary>{{$setting->name}}</summary>
+        <form
+            hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/save"
+            hx-trigger="submit"
+            hx-target="#settingsContainer"
+            hx-swap="innerhtml"
+        >
+            <div class="tw-flex tw-flex-col">
+                <input name="id" type="hidden" value="{{$setting->id}}"/>
+                <input name="name" type="text" value="{{$setting->name}}"/>
+                <textarea name="subtitle">{{$setting->subtitle}}</textarea>
 
-                    <p>Global Weight</p>
-                    <input type="number" name="globalWeight" value="{{ $settings[$project['id']]->globalWeight ?? 1 }}" class="main-title-input tw-w-full" placeholder="Global Weight" style="background:none;"/><br />
-                    
-                    <input type="submit" value="Save" style="width:auto !important;"/>
-                </form>
-            </details>
-        </div>
+                <p>Modules</p>
+                <textarea name="modules">{{json_encode($setting->modules)}}</textarea>
+
+                <input type="submit" value="Save" name="submitBtn" style="width:auto !important;"/>
+            </div>
+        </form>
+    </details>
     @endforeach
 </div>
+
+<script>
+
+
+</script>

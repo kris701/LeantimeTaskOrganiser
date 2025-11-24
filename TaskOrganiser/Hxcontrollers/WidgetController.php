@@ -7,7 +7,7 @@ use Leantime\Domain\Setting\Services\Setting;
 use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 use Leantime\Plugins\TaskOrganiser\Services\SortingService;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
-use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
+use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
 
 class WidgetController extends HtmxController
 {
@@ -38,12 +38,15 @@ class WidgetController extends HtmxController
         }
 
         $userId = session('userdata.id');
-        $globalTasks = $this->sortingService->CalculateGlobal();
-        $todaysTasks = $this->sortingService->CalculateToday($globalTasks);
-		
+        $tasks = $this->sortingService->Calculate();
+
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);        
+
         // Return needed items
-		$this->tpl->assign('globalTasks', $globalTasks);
-		$this->tpl->assign('todaysTasks', $todaysTasks);
+		$this->tpl->assign('settings', $settingsIndex);
+		$this->tpl->assign('tasks', $tasks);
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());
 		$this->tpl->assign('priorityLabels', $this->ticketsService->getPriorityLabels());

@@ -5,6 +5,7 @@ namespace Leantime\Plugins\TaskOrganiser\Services;
 use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
+use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\StatusSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
@@ -26,90 +27,56 @@ class SortingService
         $this->projectsService = $projectsService;
     }
 
-    public function CalculateGlobal() : array {
+    public function Calculate() : array {
         $userId = session('userdata.id');
         $searchCriteria = array(
             "type"=>"task"
         );
-        $relevantTasks = $this->ticketsService->getAll($searchCriteria);
-        $settings = $this->GetAllSettings();
+        $tasks = $this->ticketsService->getAll($searchCriteria);
+        $settings = $this->GetSettings();
 
         $tickets = array();
 
-        foreach($relevantTasks as $task){
-            $relevantSettings = $settings[$task['projectId']];
-
-            if ($relevantSettings != null){
+        foreach($settings->indexes as $setting){
+            $settingResult = [];
+            foreach($tasks as $task){
+                $newTask = new TicketModel($task);
                 $weight = 0;
-                foreach($relevantSettings->modules as $module)
-                    $weight += $module.Calculate($task);
-                $task['weight'] = $weight + $relevantSettings->globalWeight;
-            }
-            else
-                $task['weight'] = -1;
+                foreach($setting->modules as $module)
+                    $weight += $module->Calculate($newTask);
+                $newTask->weight = $weight;
 
-            array_push($tickets, $task);
+                array_push($settingResult, $newTask);
+            }
+            usort($settingResult, function ($a, $b) {
+                return $b->weight - $a->weight;
+            });
+            $tickets[$setting->id] = $settingResult;
         }
-        $this->Sort($tickets);
 
         return $tickets;
     }
 
-    function GetAllSettings() : array {
-        $settings = array();
-
+    function GetSettings() : SettingsIndex {
         $userId = session('userdata.id');
-        $projects = $this->projectsService->getProjectsAssignedToUser($userId);
-        foreach($projects as $project) {
-            $projectId = $project['id'];
-            $sortingKey = "user.{$userId}.taskorganisersettings.{$projectId}";
-            $settingDataStr = $this->settingsService->getSetting($sortingKey);
-            $thisProjectSettings = new SettingsModel($settingDataStr);
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settings = new SettingsIndex($settingDataStr);
 
-            $moduleSettings = $thisProjectSettings->modules;
-            $thisProjectSettings->modules = [];
-            foreach($moduleSettings as $moduleSetting){
-                switch($moduleSetting->type){
-                    case 'status':
-                        array_push($thisProjectSettings->modules, new StatusSortModule($moduleSetting));
-                        break;
+        foreach($settings->indexes as $setting){
+            $moduleSettings = $setting->modules;
+            $setting->modules = [];
+            if ($moduleSettings != null){
+                foreach($moduleSettings as $moduleSetting){
+                    switch($moduleSetting->type){
+                        case 'status':
+                            array_push($setting->modules, new StatusSortModule($moduleSetting));
+                            break;
+                    }
                 }
             }
-
-            $settings[$project['id']] = $thisProjectSettings;
         }
 
         return $settings;
-    }
-
-    public function CalculateToday(array $tickets) : array {
-        $settings = $this->GetAllSettings();
-
-        $todaysTickets = array();
-
-        foreach($tickets as $task){
-            $newTicket = $task;
-            $relevantSettings = $settings[$newTicket['projectId']];
-
-            if ($relevantSettings != null){
-                $weight = 0;
-                foreach($relevantSettings->modules as $module)
-                    $weight += $module.Calculate($newTicket);
-                $newTicket['weight'] = $weight + $relevantSettings->todaysWeight;
-            }
-            else
-                $newTicket['weight'] = -1;
-
-            array_push($tickets, $newTicket);
-        }
-        $this->Sort($todaysTickets);
-
-        return $todaysTickets;
-    }
-
-    public function Sort(array $tickets){
-        usort($tickets, function ($a, $b) {
-            return $a['weight'] - $b['weight'];
-        });
     }
 }

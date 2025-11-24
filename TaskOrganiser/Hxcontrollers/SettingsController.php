@@ -5,6 +5,7 @@ namespace Leantime\Plugins\TaskOrganiser\Hxcontrollers;
 use Leantime\Core\Controller\HtmxController;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
+use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 
 class SettingsController extends HtmxController
@@ -32,19 +33,11 @@ class SettingsController extends HtmxController
         $params = $this->incomingRequest->query->all();
 
         $userId = session('userdata.id');
-        $projects = $this->projectsService->getProjectsAssignedToUser($userId);
-        $settings = array();
-
-        foreach($projects as $project) {
-            $projectId = $project['id'];
-            $sortingKey = "user.{$userId}.taskorganisersettings.{$projectId}";
-            $settingDataStr = $this->settingsService->getSetting($sortingKey);
-            $thisProjectSettings = new SettingsModel($settingDataStr);
-            $settings[$project['id']] = $thisProjectSettings;
-        }
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
         
-        $this->tpl->assign('projects', $projects);
-		$this->tpl->assign('settings', $settings);
+		$this->tpl->assign('settings', $settingsIndex);
 	}
 
     public function save(){
@@ -52,14 +45,22 @@ class SettingsController extends HtmxController
             throw new Error('This endpoint only supports POST requests');
         }
 
-        $project = $this->incomingRequest->get('project');
+        $id = $this->incomingRequest->get("id");
+        $name = $this->incomingRequest->get("name");
+        $subtitle = $this->incomingRequest->get("subtitle");
+        $modules = $this->incomingRequest->get("modules");
+
         $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings.{$project}";
+        $sortingKey = "user.{$userId}.taskorganisersettings";
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $thisProjectSettings = new SettingsModel($settingDataStr);
+        $settingsIndex = new SettingsIndex($settingDataStr);
 
-        $thisProjectSettings->globalWeight = intval($this->incomingRequest->get('globalWeight'));
+        $settingsIndex->indexes[$id]->name = $name;
+        $settingsIndex->indexes[$id]->subtitle = $subtitle;
+        $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
-        $this->settingsService->saveSetting($sortingKey, $thisProjectSettings->Serialize());
+        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+        
+        $this->tpl->assign('settings', $settingsIndex);
     }
 }

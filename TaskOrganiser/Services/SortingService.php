@@ -5,7 +5,8 @@ namespace Leantime\Plugins\TaskOrganiser\Services;
 use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
-use Leantime\Plugins\TaskOrganiser\Models\SortModules\BaseSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\StatusSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 
@@ -64,6 +65,17 @@ class SortingService
             $sortingKey = "user.{$userId}.taskorganisersettings.{$projectId}";
             $settingDataStr = $this->settingsService->getSetting($sortingKey);
             $thisProjectSettings = new SettingsModel($settingDataStr);
+
+            $moduleSettings = $thisProjectSettings->modules;
+            $thisProjectSettings->modules = [];
+            foreach($moduleSettings as $moduleSetting){
+                switch($moduleSetting->type){
+                    case 'status':
+                        array_push($thisProjectSettings->modules, new StatusSortModule($moduleSetting));
+                        break;
+                }
+            }
+
             $settings[$project['id']] = $thisProjectSettings;
         }
 

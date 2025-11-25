@@ -57,6 +57,14 @@
                                 <p>Persistency (hours)</p>
                                 <input name="persistency" type="number" value="{{$setting->persistency}}"/>
                             </div>
+                            <div class="settingField">
+                                <p>Always Show</p>
+                                @if($setting->shownbydefault)
+                                    <input name="shownbydefault" type="checkbox" checked value="true"/>
+                                @else
+                                    <input name="shownbydefault" type="checkbox"/>
+                                @endif
+                            </div>
 
                             <p>Modules</p>
                             <textarea name="modules" class="moduleArea" style="width:auto !important;height:20vh">{{json_encode($setting->modules)}}</textarea>

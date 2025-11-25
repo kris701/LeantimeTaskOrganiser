@@ -50,6 +50,7 @@ class SettingsController extends HtmxController
         $subtitle = $this->incomingRequest->get("subtitle");
         $maxtasks = $this->incomingRequest->get("maxtasks");
         $persistency = $this->incomingRequest->get("persistency");
+        $shownbydefault = $this->incomingRequest->get("shownbydefault");
         $modules = $this->incomingRequest->get("modules");
 
         $userId = session('userdata.id');
@@ -64,6 +65,7 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->subtitle = $subtitle;
         $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
         $settingsIndex->indexes[$id]->persistency = $persistency;
+        $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
@@ -83,6 +85,7 @@ class SettingsController extends HtmxController
         $subtitle = $this->incomingRequest->get("subtitle");
         $maxtasks = $this->incomingRequest->get("maxtasks");
         $persistency = $this->incomingRequest->get("persistency");
+        $shownbydefault = $this->incomingRequest->get("shownbydefault");
         $modules = $this->incomingRequest->get("modules");
 
         $userId = session('userdata.id');
@@ -94,6 +97,7 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->subtitle = $subtitle;
         $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
         $settingsIndex->indexes[$id]->persistency = $persistency;
+        $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());

@@ -44,7 +44,10 @@ class WidgetController extends HtmxController
         if (! $this->incomingRequest->getMethod() == 'DELETE') {
             throw new Error('This endpoint only supports DELETE requests!');
         }
-        $this->sortingService->clearCache();
+
+        $id = $this->incomingRequest->get("id");
+
+        $this->sortingService->clearCache($id);
         $this->GetData();
     }
 

@@ -10,6 +10,7 @@ class SettingsModel
 
     public int $maxtasks;
     public int $persistency;
+    public bool $shownbydefault;
 
     public $modules = array();
 }

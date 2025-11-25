@@ -33,13 +33,10 @@ class SortingService
         $this->cacheRepository = $cacheRepository;
     }
 
-    public function ClearCache() {
+    public function ClearCache(string $id) {
         $userId = session('userdata.id');
-        $settings = $this->GetSettings();
-        foreach($settings->indexes as $setting){
-            $cacheKey = "user.{$userId}.{$setting->id}";
-            $this->cacheRepository->deleteCache($cacheKey);
-        }
+        $cacheKey = "user.{$userId}.{$id}";
+        $this->cacheRepository->deleteCache($cacheKey);
     }
 
     public function Calculate() : array {

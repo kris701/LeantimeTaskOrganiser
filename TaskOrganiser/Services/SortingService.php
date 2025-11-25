@@ -12,6 +12,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\StatusSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\PrioritySortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\ClientSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\DueDateSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 
@@ -129,6 +130,9 @@ class SortingService
                             break;
                         case 'client':
                             array_push($setting->modules, new ClientSortModule($moduleSetting));
+                            break;
+                        case 'duedate':
+                            array_push($setting->modules, new DueDateSortModule($moduleSetting));
                             break;
                     }
                 }

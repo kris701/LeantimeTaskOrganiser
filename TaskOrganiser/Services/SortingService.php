@@ -10,6 +10,8 @@ use Leantime\Plugins\TaskOrganiser\Models\CachedTaskList;
 use Leantime\Plugins\TaskOrganiser\Repositories\CacheRepository;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\StatusSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\PrioritySortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\ClientSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 
@@ -121,6 +123,12 @@ class SortingService
                     switch($moduleSetting->type){
                         case 'status':
                             array_push($setting->modules, new StatusSortModule($moduleSetting));
+                            break;
+                        case 'priority':
+                            array_push($setting->modules, new PrioritySortModule($moduleSetting));
+                            break;
+                        case 'client':
+                            array_push($setting->modules, new ClientSortModule($moduleSetting));
                             break;
                     }
                 }

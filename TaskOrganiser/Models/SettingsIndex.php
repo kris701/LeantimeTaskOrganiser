@@ -14,6 +14,8 @@ class SettingsIndex
             $newItem->id = 0;
             $newItem->name = "New Task List";
             $newItem->subtitle = "The default task list";
+            $newItem->maxtasks = 10;
+            $newItem->persistency = -1;
             $newItem->modules = [];
             array_push($this->indexes, $newItem);
             return;

@@ -6,6 +6,8 @@ use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
+use Leantime\Plugins\TaskOrganiser\Models\CachedTaskList;
+use Leantime\Plugins\TaskOrganiser\Repositories\CacheRepository;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\StatusSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
@@ -16,15 +18,28 @@ class SortingService
     private TicketService $ticketsService;
     private SettingService $settingsService;
     private ProjectService $projectsService;
+    
+    private CacheRepository $cacheRepository;
 
     public function __construct(
         TicketService $ticketsService,
         SettingService $settingsService,
         ProjectService $projectsService,
+        CacheRepository $cacheRepository,
     ) {
         $this->ticketsService = $ticketsService;
         $this->settingsService = $settingsService;
         $this->projectsService = $projectsService;
+        $this->cacheRepository = $cacheRepository;
+    }
+
+    public function ClearCache() {
+        $userId = session('userdata.id');
+        $settings = $this->GetSettings();
+        foreach($settings->indexes as $setting){
+            $cacheKey = "user.{$userId}.{$setting->id}";
+            $this->cacheRepository->deleteCache($cacheKey);
+        }
     }
 
     public function Calculate() : array {
@@ -37,24 +52,52 @@ class SortingService
 
         $tickets = array();
 
-        foreach($settings->indexes as $setting){
-            $settingResult = [];
-            foreach($tasks as $task){
-                $newTask = new TicketModel($task);
-                $weight = 0;
-                foreach($setting->modules as $module)
-                    $weight += $module->Calculate($newTask);
-                $newTask->weight = $weight;
+        $date_utc = new \DateTime('now', new \DateTimeZone('UTC'));
 
-                array_push($settingResult, $newTask);
+        foreach($settings->indexes as $setting){
+            $cacheKey = "user.{$userId}.{$setting->id}";
+            if ($setting->persistency > 0){
+                $cache = $this->cacheRepository->getCache($cacheKey);
+                if ($cache){
+                    $expires = new \DateTime($cache->expires, new \DateTimeZone('UTC'));
+                    if ($expires > $date_utc)
+                    {
+                        $tickets[$setting->id] = json_decode($cache->tasklist);
+                        continue;
+                    }
+                }
             }
-            usort($settingResult, function ($a, $b) {
-                return $b->weight - $a->weight;
-            });
-            $tickets[$setting->id] = $settingResult;
+            $newList = $this->CalculateTaskList($tasks, $setting);
+            $tickets[$setting->id] = $newList;
+            if ($setting->persistency > 0) {
+                $date_utc_modified = (clone $date_utc)->add(new \DateInterval("PT{$setting->persistency}H"));
+                $newCache = new CachedTaskList();
+                $newCache->id = $cacheKey;
+                $newCache->expires = $date_utc_modified->format('Y-m-d H:i:s');
+                $newCache->tasklist = json_encode($newList);
+                $this->cacheRepository->addCache($newCache);
+            }
         }
 
         return $tickets;
+    }
+
+    function CalculateTaskList(array $tasks, object $setting){
+        $settingResult = [];
+        foreach($tasks as $task){
+            $newTask = new TicketModel($task);
+            $weight = 0;
+            foreach($setting->modules as $module)
+                $weight += $module->Calculate($newTask);
+            $newTask->weight = $weight;
+
+            if ($weight >= 0)
+                array_push($settingResult, $newTask);
+        }
+        usort($settingResult, function ($a, $b) {
+            return $b->weight - $a->weight;
+        });
+        return array_slice($settingResult, 0, $setting->maxtasks);
     }
 
     function GetSettings() : SettingsIndex {

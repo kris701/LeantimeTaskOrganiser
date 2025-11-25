@@ -1,12 +1,24 @@
 <div id="taskOrganiserBody"
 	class="tw-w-full tw-h-full tw-overflow-x-hidden"
 >
+	<form
+		hx-delete="{{ BASE_URL }}/taskOrganiser/widgetController/clearCache"
+		hx-trigger="submit"
+		hx-target="#taskOrganiserBody"
+		hx-swap="innerhtml"
+	>
+		<div class="tw-flex tw-flex-col">
+			<input type="submit" value="Clear Cache" style="width:auto !important;"/>
+		</div>
+	</form>
+
 	@foreach ($settings->indexes as $setting)
 		<div>
 			<p>{{$setting->name}}</p>
 			<p>{{$setting->subtitle}}</p>
 			<div class="ticketBox" style="cursor:default">
 				<div class="tw-flex tw-flex-row" style="gap:1rem">
+					<p style="align-content:center;width:3rem">Weight</p>
 					<p>ID</p>
 					<p class="tw-flex-1">Name and Project</p>
 					<p style="align-content:center;text-align:center;width:10rem">Priority</p>
@@ -18,8 +30,11 @@
 				@foreach ($tasks[$setting->id] as $ticket)
 					<div class="ticketBox" style="cursor:default">
 						<div class="tw-flex tw-flex-row" style="gap:1rem">
-							<div style="align-content:center">
+							<div style="align-content:center;width:3rem">
 								<span>{{ $ticket->weight }}</span>
+							</div>	
+
+							<div style="align-content:center">
 								<span>#{{ $ticket->id }}</span>
 							</div>
 

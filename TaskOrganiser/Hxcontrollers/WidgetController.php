@@ -37,6 +37,18 @@ class WidgetController extends HtmxController
             throw new Error('This endpoint only supports GET requests!');
         }
 
+        $this->GetData();
+	}
+
+    public function clearCache(){
+        if (! $this->incomingRequest->getMethod() == 'DELETE') {
+            throw new Error('This endpoint only supports DELETE requests!');
+        }
+        $this->sortingService->clearCache();
+        $this->GetData();
+    }
+
+    private function GetData(){
         $userId = session('userdata.id');
         $tasks = $this->sortingService->Calculate();
 
@@ -50,5 +62,5 @@ class WidgetController extends HtmxController
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());
 		$this->tpl->assign('priorityLabels', $this->ticketsService->getPriorityLabels());
-	}
+    }
 }

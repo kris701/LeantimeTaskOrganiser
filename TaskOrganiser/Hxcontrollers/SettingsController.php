@@ -48,6 +48,8 @@ class SettingsController extends HtmxController
 
         $name = $this->incomingRequest->get("name");
         $subtitle = $this->incomingRequest->get("subtitle");
+        $maxtasks = $this->incomingRequest->get("maxtasks");
+        $persistency = $this->incomingRequest->get("persistency");
         $modules = $this->incomingRequest->get("modules");
 
         $userId = session('userdata.id');
@@ -60,11 +62,15 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->id = $id;
         $settingsIndex->indexes[$id]->name = $name;
         $settingsIndex->indexes[$id]->subtitle = $subtitle;
+        $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
+        $settingsIndex->indexes[$id]->persistency = $persistency;
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+
+        $this->tpl->setNotification("Task list added!", 'success');
     }
 
     public function save(){
@@ -75,6 +81,8 @@ class SettingsController extends HtmxController
         $id = $this->incomingRequest->get("id");
         $name = $this->incomingRequest->get("name");
         $subtitle = $this->incomingRequest->get("subtitle");
+        $maxtasks = $this->incomingRequest->get("maxtasks");
+        $persistency = $this->incomingRequest->get("persistency");
         $modules = $this->incomingRequest->get("modules");
 
         $userId = session('userdata.id');
@@ -84,11 +92,15 @@ class SettingsController extends HtmxController
 
         $settingsIndex->indexes[$id]->name = $name;
         $settingsIndex->indexes[$id]->subtitle = $subtitle;
+        $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
+        $settingsIndex->indexes[$id]->persistency = $persistency;
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+
+        $this->tpl->setNotification("Task list saved!", 'success');
     }
 
     public function delete(){
@@ -108,5 +120,7 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+
+        $this->tpl->setNotification("Task list deleted!", 'success');
     }
 }

@@ -14,6 +14,16 @@
                 <input name="name" style="width:auto !important;" type="text" placeholder="Name"/>
                 <textarea name="subtitle" style="width:auto !important;" placeholder="Description"></textarea>
 
+                <p>General</p>
+                <div class="settingField">
+                    <p>Max Tasks</p>
+                    <input name="maxtasks" type="number" value="10"/>
+                </div>
+                <div class="settingField">
+                    <p>Persistency (hours)</p>
+                    <input name="persistency" type="number" value="-1"/>
+                </div>
+
                 <p>Modules</p>
                 <textarea name="modules" class="moduleArea" style="width:auto !important;height:20vh" placeholder="Module Definitions"></textarea>
 
@@ -37,6 +47,16 @@
                             <input name="id" type="hidden" value="{{$setting->id}}"/>
                             <input name="name" style="width:auto !important;" type="text" value="{{$setting->name}}"/>
                             <textarea name="subtitle" style="width:auto !important;">{{$setting->subtitle}}</textarea>
+
+                            <p>General</p>
+                            <div class="settingField">
+                                <p>Max Tasks</p>
+                                <input name="maxtasks" type="number" value="{{$setting->maxtasks}}"/>
+                            </div>
+                            <div class="settingField">
+                                <p>Persistency (hours)</p>
+                                <input name="persistency" type="number" value="{{$setting->persistency}}"/>
+                            </div>
 
                             <p>Modules</p>
                             <textarea name="modules" class="moduleArea" style="width:auto !important;height:20vh">{{json_encode($setting->modules)}}</textarea>
@@ -83,6 +103,27 @@
 </script>
 
 <style>
+    .settingField {
+        display:flex;
+        flex-direction: row;
+        border: 1px solid var(--main-border-color);
+        border-radius: var(--box-radius);
+        box-shadow: var(--regular-shadow);
+        align-items: center;
+        text-align: center;
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        > p {
+            width:15%;
+        }
+
+        > input {
+            width:100%;
+            margin:2px
+        }
+    }
+
     .newSettings {
         background-color: var(--secondary-background);
         border: 3px solid transparent;

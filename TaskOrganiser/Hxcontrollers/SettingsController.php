@@ -34,11 +34,38 @@ class SettingsController extends HtmxController
 
         $userId = session('userdata.id');
         $sortingKey = "user.{$userId}.taskorganisersettings";
+        //$this->settingsService->saveSetting($sortingKey, (new SettingsIndex(""))->Serialize());
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
         $settingsIndex = new SettingsIndex($settingDataStr);
         
 		$this->tpl->assign('settings', $settingsIndex);
 	}
+
+    public function add(){
+        if (! $this->incomingRequest->getMethod() == 'POST') {
+            throw new Error('This endpoint only supports POST requests');
+        }
+
+        $name = $this->incomingRequest->get("name");
+        $subtitle = $this->incomingRequest->get("subtitle");
+        $modules = $this->incomingRequest->get("modules");
+
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+
+        $id = max(array_map( function($v) { return $v->id; } ,$settingsIndex->indexes)) + 1;
+        $settingsIndex->indexes[$id] = new SettingsModel();
+        $settingsIndex->indexes[$id]->id = $id;
+        $settingsIndex->indexes[$id]->name = $name;
+        $settingsIndex->indexes[$id]->subtitle = $subtitle;
+        $settingsIndex->indexes[$id]->modules = json_decode($modules);
+
+        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+        
+        $this->tpl->assign('settings', $settingsIndex);
+    }
 
     public function save(){
         if (! $this->incomingRequest->getMethod() == 'POST') {
@@ -58,6 +85,25 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->name = $name;
         $settingsIndex->indexes[$id]->subtitle = $subtitle;
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
+
+        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+        
+        $this->tpl->assign('settings', $settingsIndex);
+    }
+
+    public function delete(){
+        if (! $this->incomingRequest->getMethod() == 'DELETE') {
+            throw new Error('This endpoint only supports DELETE requests');
+        }
+
+        $id = $this->incomingRequest->get("id");
+
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+
+        unset($settingsIndex->indexes[$id]);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         

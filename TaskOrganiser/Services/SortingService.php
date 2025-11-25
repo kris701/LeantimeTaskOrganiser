@@ -55,6 +55,9 @@ class SortingService
         $date_utc = new \DateTime('now', new \DateTimeZone('UTC'));
 
         foreach($settings->indexes as $setting){
+            $targetTasks = $tasks;
+
+            // Check cache for existing
             $cacheKey = "user.{$userId}.{$setting->id}";
             if ($setting->persistency > 0){
                 $cache = $this->cacheRepository->getCache($cacheKey);
@@ -62,19 +65,27 @@ class SortingService
                     $expires = new \DateTime($cache->expires, new \DateTimeZone('UTC'));
                     if ($expires > $date_utc)
                     {
-                        $tickets[$setting->id] = json_decode($cache->tasklist);
-                        continue;
+                        $cacheTasks = json_decode($cache->tasklist);
+                        $targetTasks = array_filter(
+                            $targetTasks, 
+                            function($value) use ($cacheTasks) { 
+                                return in_array((string)$value['id'], $cacheTasks); 
+                            }
+                        );
                     }
                 }
             }
-            $newList = $this->CalculateTaskList($tasks, $setting);
+            
+            $newList = $this->CalculateTaskList($targetTasks, $setting);
             $tickets[$setting->id] = $newList;
+
+            // Save cache
             if ($setting->persistency > 0) {
                 $date_utc_modified = (clone $date_utc)->add(new \DateInterval("PT{$setting->persistency}H"));
                 $newCache = new CachedTaskList();
                 $newCache->id = $cacheKey;
                 $newCache->expires = $date_utc_modified->format('Y-m-d H:i:s');
-                $newCache->tasklist = json_encode($newList);
+                $newCache->tasklist = json_encode(array_map(function ($v) { return $v->id; }, $newList));
                 $this->cacheRepository->addCache($newCache);
             }
         }
@@ -91,8 +102,7 @@ class SortingService
                 $weight += $module->Calculate($newTask);
             $newTask->weight = $weight;
 
-            if ($weight >= 0)
-                array_push($settingResult, $newTask);
+            array_push($settingResult, $newTask);
         }
         usort($settingResult, function ($a, $b) {
             return $b->weight - $a->weight;

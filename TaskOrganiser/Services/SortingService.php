@@ -15,8 +15,12 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\ClientSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\DueDateSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\EffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\TopNEffortSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsRadioSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
+
+use Leantime\Core\Configuration\Environment;
+use Leantime\Core\Db\Db;
 
 class SortingService
 {
@@ -26,16 +30,23 @@ class SortingService
     
     private CacheRepository $cacheRepository;
 
+    private Db $db;
+    private Environment $config;
+
     public function __construct(
         TicketService $ticketsService,
         SettingService $settingsService,
         ProjectService $projectsService,
         CacheRepository $cacheRepository,
+        Db $db,
+        Environment $config
     ) {
         $this->ticketsService = $ticketsService;
         $this->settingsService = $settingsService;
         $this->projectsService = $projectsService;
         $this->cacheRepository = $cacheRepository;
+        $this->db = $db;
+        $this->config = $config;
     }
 
     public function ClearCache(string $id) {
@@ -141,6 +152,9 @@ class SortingService
                             break;
                         case 'topneffort':
                             array_push($setting->modules, new TopNEffortSortModule($moduleSetting));
+                            break;
+                        case 'customfields_radio':
+                            array_push($setting->modules, new CustomFieldsRadioSortModule($this->db, $this->config, $moduleSetting));
                             break;
                     }
                 }

@@ -14,6 +14,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\PrioritySortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\ClientSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\DueDateSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\EffortSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\TopNEffortSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 
@@ -137,6 +138,9 @@ class SortingService
                             break;
                         case 'effort':
                             array_push($setting->modules, new EffortSortModule($moduleSetting));
+                            break;
+                        case 'topneffort':
+                            array_push($setting->modules, new TopNEffortSortModule($moduleSetting));
                             break;
                     }
                 }

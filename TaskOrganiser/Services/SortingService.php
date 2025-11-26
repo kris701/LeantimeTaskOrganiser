@@ -16,6 +16,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\DueDateSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\EffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\TopNEffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsRadioSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsBoolSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 
@@ -155,6 +156,9 @@ class SortingService
                             break;
                         case 'customfields_radio':
                             array_push($setting->modules, new CustomFieldsRadioSortModule($this->db, $this->config, $moduleSetting));
+                            break;
+                        case 'customfields_bool':
+                            array_push($setting->modules, new CustomFieldsBoolSortModule($this->db, $this->config, $moduleSetting));
                             break;
                     }
                 }

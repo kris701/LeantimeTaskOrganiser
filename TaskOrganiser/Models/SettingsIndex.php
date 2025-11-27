@@ -23,7 +23,7 @@ class SettingsIndex
             $newItem->includetasks = true;
             $newItem->includesubtasks = true;
 
-            $newItem->modules = [];
+            $newItem->modules = array();
             array_push($this->indexes, $newItem);
             return;
         }

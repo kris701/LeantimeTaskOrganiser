@@ -41,9 +41,37 @@
                     <input name="includesubtasks" type="checkbox"/>
                 </div>
 
-                <p>Modules</p>
-                <textarea name="modules" class="moduleArea" style="width:auto !important;height:20vh" placeholder="Module Definitions"></textarea>
-
+                <details>
+                    <summary style="height:2rem;align-content:center">
+                        Modules
+                    </summary>
+                    <div style="text-align:center">
+                        <p>Here you can configure what sort modules you want to use.</p>
+                        <div class="inlineDropDownContainer tw-float-right">
+                            <a href="javascript:void(0);" class="dropdown-toggle ticketDropDown editHeadline" data-toggle="dropdown">
+                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <div class="tw-flex tw-flex-col" style="gap:0.5rem;align-items:center;">
+                                    <p>Add module definition</p>
+                                    <p>Common</p>
+                                    <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', clientSortModuleDef)"/>
+                                    <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', dueDateSortModuleDef)"/>
+                                    <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', effortSortModuleDef)"/>
+                                    <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', topNEffortSortModuleDef)"/>
+                                    <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', prioritySortModuleDef)"/>
+                                    <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
+                                    <p>Custom Fields</p>
+                                    <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_boolDef)"/>
+                                    <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_checkboxDef)"/>
+                                    <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_radioDef)"/>
+                                </div>
+                            </ul>
+                        </div>
+                        <textarea id="newModuleArea" name="modules" class="moduleArea" style="width:80% !important;height:50vh" placeholder="Module Definitions"></textarea>
+                    </div>
+                </details>
+                
                 <input type="submit" value="Add" style="width:auto !important;"/>
             </div>
         </form>
@@ -105,8 +133,36 @@
                                 @endif
                             </div>
 
-                            <p>Modules</p>
-                            <textarea name="modules" class="moduleArea" style="width:auto !important;height:20vh">{{json_encode($setting->modules)}}</textarea>
+                            <details>
+                                <summary style="height:2rem;align-content:center">
+                                    Modules
+                                </summary>
+                                <div style="text-align:center">
+                                    <p>Here you can configure what sort modules you want to use.</p>
+                                    <div class="inlineDropDownContainer tw-float-right">
+                                        <a href="javascript:void(0);" class="dropdown-toggle ticketDropDown editHeadline" data-toggle="dropdown">
+                                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <div class="tw-flex tw-flex-col" style="gap:0.5rem;align-items:center;">
+                                                <p>Add module definition</p>
+                                                <p>Common</p>
+                                                <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', clientSortModuleDef)"/>
+                                                <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', dueDateSortModuleDef)"/>
+                                                <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', effortSortModuleDef)"/>
+                                                <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', topNEffortSortModuleDef)"/>
+                                                <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
+                                                <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
+                                                <p>Custom Fields</p>
+                                                <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_boolDef)"/>
+                                                <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
+                                                <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_radioDef)"/>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                    <textarea id="modulearea-{{$setting->id}}" name="modules" class="moduleArea" style="width:80% !important;height:50vh" placeholder="Module Definitions">{{json_encode($setting->modules)}}</textarea>
+                                </div>
+                            </details>
 
                             <input type="submit" value="Save" style="width:auto !important;"/>
                         </div>
@@ -146,6 +202,78 @@
             jQuery("#addContainer").hide();
         });
     });
+
+    function test(elementName, target){
+        var element = document.getElementById(elementName);
+        var text = element.value;
+        if (text == null || text == "")
+            text = "[]"
+        var object = JSON.parse(text);
+        object.push(target);
+        element.value = JSON.stringify(object, undefined, 4);
+    }
+
+    // Common
+    clientSortModuleDef = {
+        "type":"client",
+        "clientMap":{
+            "name":0
+        }
+    }
+    dueDateSortModuleDef = {
+        "type":"duedate",
+        "daysUntilMap":{
+            "7":1,
+            "2":5
+        }
+    }
+    effortSortModuleDef = {
+        "type":"effort",
+        "effortMap":{
+            "0":0
+        }
+    }
+    topNEffortSortModuleDef = {
+        "type":"topneffort",
+        "top": 2,
+        "effortMap":{
+            "0":0
+        }
+    }
+    prioritySortModuleDef = {
+        "type":"priority",
+        "priorityMap":{
+            "0":0
+        }
+    }
+    statusSortModuleDef = {
+        "type":"status",
+        "statusMap":{
+            "0":0
+        }
+    }
+
+    // Custom Fields
+    customFields_boolDef = {
+        "type":"customfields_bool",
+        "name":"field_name",
+        "trueWeight":0,
+        "falseWeight":0
+    }
+    customFields_checkboxDef = {
+        "type":"customfields_checkbox",
+        "name":"field_name",
+        "selectionMap":{
+            "value":0
+        }
+    }
+    customFields_radioDef = {
+        "type":"customfields_radio",
+        "name":"field_name",
+        "selectionMap":{
+            "value":0
+        }
+    }
 
 </script>
 

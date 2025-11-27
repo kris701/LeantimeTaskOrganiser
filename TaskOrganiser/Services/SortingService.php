@@ -16,6 +16,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\DueDateSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\EffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\TopNEffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\ProjectSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\MilestoneSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsRadioSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsBoolSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsCheckboxSortModule;
@@ -164,6 +165,9 @@ class SortingService
                             break;
                         case 'effort':
                             array_push($setting->modules, new EffortSortModule($moduleSetting));
+                            break;
+                        case 'milestone':
+                            array_push($setting->modules, new MilestoneSortModule($moduleSetting));
                             break;
                         case 'topneffort':
                             array_push($setting->modules, new TopNEffortSortModule($moduleSetting));

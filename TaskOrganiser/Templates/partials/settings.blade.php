@@ -62,6 +62,7 @@
                                     <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', prioritySortModuleDef)"/>
                                     <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
                                     <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', projectSortModuleDef)"/>
+                                    <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', milestoneSortModuleDef)"/>
                                     <p>Custom Fields</p>
                                     <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_boolDef)"/>
                                     <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_checkboxDef)"/>
@@ -155,6 +156,7 @@
                                                 <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
                                                 <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
                                                 <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
+                                                <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
                                                 <p>Custom Fields</p>
                                                 <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_boolDef)"/>
                                                 <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
@@ -218,45 +220,51 @@
     // Common
     clientSortModuleDef = {
         "type":"client",
-        "clientMap":{
+        "map":{
             "name":0
         }
     }
     dueDateSortModuleDef = {
         "type":"duedate",
-        "daysUntilMap":{
+        "map":{
             "7":1,
             "2":5
         }
     }
     effortSortModuleDef = {
         "type":"effort",
-        "effortMap":{
+        "map":{
             "0":0
         }
     }
     topNEffortSortModuleDef = {
         "type":"topneffort",
         "top": 2,
-        "effortMap":{
+        "map":{
             "0":0
         }
     }
     prioritySortModuleDef = {
         "type":"priority",
-        "priorityMap":{
+        "map":{
             "0":0
         }
     }
     statusSortModuleDef = {
         "type":"status",
-        "statusMap":{
+        "map":{
             "0":0
         }
     }
     projectSortModuleDef = {
         "type":"project",
-        "projectMap":{
+        "map":{
+            "project_name":0
+        }
+    }
+    milestoneSortModuleDef = {
+        "type":"milestone",
+        "map":{
             "0":0
         }
     }
@@ -271,14 +279,14 @@
     customFields_checkboxDef = {
         "type":"customfields_checkbox",
         "name":"field_name",
-        "selectionMap":{
+        "map":{
             "value":0
         }
     }
     customFields_radioDef = {
         "type":"customfields_radio",
         "name":"field_name",
-        "selectionMap":{
+        "map":{
             "value":0
         }
     }

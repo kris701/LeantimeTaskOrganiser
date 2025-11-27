@@ -15,7 +15,7 @@ use Leantime\Core\Db\Db;
 class CustomFieldsRadioSortModule extends BaseSortModule
 {
     public string $name;
-    public array $selectionMap = [];
+    public array $map = [];
     private CustomFieldsService $customFieldsService;
 
     public function __construct(
@@ -25,7 +25,7 @@ class CustomFieldsRadioSortModule extends BaseSortModule
     ) {
         $this->customFieldsService = new CustomFieldsService(new CustomFieldsRepo($db), $config);
         $this->name = $data->name;
-        $this->selectionMap = get_object_vars($data->selectionMap);
+        $this->map = get_object_vars($data->map);
     }
 
     public function Calculate(TicketModel $ticket) : int{
@@ -38,8 +38,8 @@ class CustomFieldsRadioSortModule extends BaseSortModule
             if ($targetField->type != FieldTypeEnum::RADIO)
                 return 0;
             if ($targetField->value != ""){
-                if (array_key_exists($targetField->value, $this->selectionMap)){
-                    $value = $this->selectionMap[$targetField->value];
+                if (array_key_exists($targetField->value, $this->map)){
+                    $value = $this->map[$targetField->value];
                     if ($value != null){
                         return $value;
                     }

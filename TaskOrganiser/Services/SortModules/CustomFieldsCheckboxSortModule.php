@@ -15,7 +15,7 @@ use Leantime\Core\Db\Db;
 class CustomFieldsCheckboxSortModule extends BaseSortModule
 {
     public string $name;
-    public array $selectionMap = [];
+    public array $map = [];
     private CustomFieldsService $customFieldsService;
 
     public function __construct(
@@ -25,7 +25,7 @@ class CustomFieldsCheckboxSortModule extends BaseSortModule
     ) {
         $this->customFieldsService = new CustomFieldsService(new CustomFieldsRepo($db), $config);
         $this->name = $data->name;
-        $this->selectionMap = get_object_vars($data->selectionMap);
+        $this->map = get_object_vars($data->map);
     }
 
     public function Calculate(TicketModel $ticket) : int{
@@ -41,10 +41,10 @@ class CustomFieldsCheckboxSortModule extends BaseSortModule
             if ($targetField->value != ""){
                 $totalValue = 0;
                 foreach($targetField->value as $value){
-                    if (array_key_exists($value, $this->selectionMap)){
-                        $selectionValue = $this->selectionMap[$value];
-                        if ($selectionValue != null){
-                            $totalValue += $selectionValue;
+                    if (array_key_exists($value, $this->map)){
+                        $value = $this->map[$value];
+                        if ($value != null){
+                            $totalValue += $value;
                         }
                     }
                 }

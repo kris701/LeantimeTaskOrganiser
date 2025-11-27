@@ -16,11 +16,11 @@ use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
 // }
 class DueDateSortModule extends BaseSortModule
 {
-    public array $daysUntilMap = [];
+    public array $map = [];
 
     public function __construct($data) {
-        $this->daysUntilMap = get_object_vars($data->daysUntilMap);
-        krsort($this->daysUntilMap);
+        $this->map = get_object_vars($data->map);
+        krsort($this->map);
     }
 
     public function Calculate(TicketModel $ticket) : int{
@@ -33,13 +33,13 @@ class DueDateSortModule extends BaseSortModule
         $daysUntil = intval(date_diff($utcnow, $target)->format("%r%a"));
 
         $targetExp = null;
-        foreach(array_keys($this->daysUntilMap) as $dayExp){
+        foreach(array_keys($this->map) as $dayExp){
             if ($dayExp < $daysUntil)
                 break;
             $targetExp = $dayExp;
         }
         if ($targetExp != null || $targetExp == 0)
-            return $this->daysUntilMap[$targetExp];
+            return $this->map[$targetExp];
 
         return 0;
     }

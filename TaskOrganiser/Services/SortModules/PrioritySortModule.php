@@ -7,17 +7,17 @@ use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
 
 class PrioritySortModule extends BaseSortModule
 {
-    public array $priorityMap = [];
+    public array $map = [];
 
     public function __construct($data) {
-        $this->priorityMap = get_object_vars($data->priorityMap);
+        $this->map = get_object_vars($data->map);
     }
 
     public function Calculate(TicketModel $ticket) : int{
-        if (array_key_exists($ticket->priority, $this->priorityMap)){
-            $priorityValue = $this->priorityMap[$ticket->priority];
-            if ($priorityValue != null){
-                return $priorityValue;
+        if (array_key_exists($ticket->priority, $this->map)){
+            $value = $this->map[$ticket->priority];
+            if ($value != null){
+                return $value;
             }
         }
         return 0;

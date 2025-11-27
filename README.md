@@ -28,3 +28,9 @@ There are a couple of fields that you can modify there:
 
 ## Installation
 To install this plugin, simply download the latest release ZIP file under releases and unzip it into the Leantime plugin folder.
+
+## Development
+For local development (on Windows) you can run the `dockerInit.ps1` script to download the Leantime Docker git and run the compose file.
+
+You can then subsequently execute `dockerDeploy.ps1` to copy the current `./TaskOrganiser` folder into the containers and restart them at the same time.
+

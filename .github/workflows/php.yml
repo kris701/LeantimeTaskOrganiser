@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.get-current-version.outputs.group1 }}
+      version: v${{ steps.get-current-version.outputs.group1 }}
       release: ${{ steps.get-release-version.outputs.release }}
     name: Build
     steps:

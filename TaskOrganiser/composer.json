@@ -1,7 +1,7 @@
 {
     "name": "TaskOrganiser",
     "description": "Simple plugin for Leantime to automatically organise todays todo tasks.",
-    "version": "v0.1.0",
+    "version": "1.0.0",
     "screenshot": "",
     "authors": [
         {
@@ -12,9 +12,10 @@
     "homepage": "https://github.com/kris701/LeantimeTaskOrganiser",
     "type": "leantime-plugin",
     "keywords": [
-        ""
+        "tasks",
+        "organisation"
     ],
-    "license": "Apache-2.0",
+    "license": "MIT",
     "require": {
         "leantime/leantime": "3.0"
     }

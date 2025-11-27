@@ -60,7 +60,7 @@ class SortingService
     public function Calculate() : array {
         $userId = session('userdata.id');
         $searchCriteria = array(
-            "type"=>"task"
+            "type"=>"task,subtask"
         );
         $tasks = $this->ticketsService->getAll($searchCriteria);
         $settings = $this->GetSettings();
@@ -70,7 +70,15 @@ class SortingService
         $date_utc = new \DateTime('now', new \DateTimeZone('UTC'));
 
         foreach($settings->indexes as $setting){
-            $targetTasks = $tasks;
+            $targetTasks = array_filter(
+                $tasks, 
+                function($v) use ($setting){
+                    if ($setting->includetasks && $v['type'] == "task")
+                        return true;
+                    if ($setting->includesubtasks && $v['type'] == "subtask")
+                        return true;
+                    return false;
+            });
 
             // Check cache for existing
             $cacheKey = "user.{$userId}.{$setting->id}";

@@ -24,8 +24,21 @@
                     <input name="persistency" type="number" value="-1"/>
                 </div>
                 <div class="settingField">
+                    <p>Always Show</p>
+                    <input name="shownbydefault" type="checkbox"/>
+                </div>
+                <div class="settingField">
                     <p>Order</p>
                     <input name="order" type="number" value="0"/>
+                </div>
+
+                <div class="settingField">
+                    <p>Use Tasks</p>
+                    <input name="includetasks" type="checkbox"/>
+                </div>
+                <div class="settingField">
+                    <p>Use SubTasks</p>
+                    <input name="includesubtasks" type="checkbox"/>
                 </div>
 
                 <p>Modules</p>
@@ -72,6 +85,24 @@
                             <div class="settingField">
                                 <p>Order</p>
                                 <input name="order" type="number" value="{{$setting->order}}"/>
+                            </div>
+
+                            <div class="settingField">
+                                <p>Use Tasks</p>
+                                @if($setting->includetasks)
+                                    <input name="includetasks" type="checkbox" checked value="true"/>
+                                @else
+                                    <input name="includetasks" type="checkbox"/>
+                                @endif
+                            </div>
+
+                            <div class="settingField">
+                                <p>Use SubTasks</p>
+                                @if($setting->includesubtasks)
+                                    <input name="includesubtasks" type="checkbox" checked value="true"/>
+                                @else
+                                    <input name="includesubtasks" type="checkbox"/>
+                                @endif
                             </div>
 
                             <p>Modules</p>

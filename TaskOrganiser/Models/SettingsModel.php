@@ -13,5 +13,8 @@ class SettingsModel
     public bool $shownbydefault;
     public int $order;
 
+    public bool $includetasks;
+    public bool $includesubtasks;
+
     public $modules = array();
 }

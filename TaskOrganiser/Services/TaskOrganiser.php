@@ -12,7 +12,7 @@ class TaskOrganiser
     }
 
     public function install() {
-        $sql = "DROP TABLE leantime.zp_taskorganisercache; CREATE TABLE leantime.zp_taskorganisercache (
+        $sql = "DROP TABLE IF EXISTS leantime.zp_taskorganisercache; CREATE TABLE leantime.zp_taskorganisercache (
             id varchar(255),
             expires datetime,
             tasklist LONGTEXT

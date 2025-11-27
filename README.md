@@ -7,9 +7,9 @@ You can use sort modules to order based on values such as Status, Project, Effor
 
 If you have the Custom Fields plugin, you can also use sort modules for Bool, Checkbox and Radio custom fields.
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/92d22947-af87-44f7-b8dd-9720e1161dcc" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/92d22947-af87-44f7-b8dd-9720e1161dcc" />
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/e5cac1d5-de61-4b61-97d4-c576124c9040" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/e5cac1d5-de61-4b61-97d4-c576124c9040" />
 
 ## Configuration
 You can configure your task lists under Account Settings.

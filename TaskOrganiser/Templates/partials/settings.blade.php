@@ -23,6 +23,10 @@
                     <p>Persistency (hours)</p>
                     <input name="persistency" type="number" value="-1"/>
                 </div>
+                <div class="settingField">
+                    <p>Order</p>
+                    <input name="order" type="number" value="0"/>
+                </div>
 
                 <p>Modules</p>
                 <textarea name="modules" class="moduleArea" style="width:auto !important;height:20vh" placeholder="Module Definitions"></textarea>
@@ -64,6 +68,10 @@
                                 @else
                                     <input name="shownbydefault" type="checkbox"/>
                                 @endif
+                            </div>
+                            <div class="settingField">
+                                <p>Order</p>
+                                <input name="order" type="number" value="{{$setting->order}}"/>
                             </div>
 
                             <p>Modules</p>

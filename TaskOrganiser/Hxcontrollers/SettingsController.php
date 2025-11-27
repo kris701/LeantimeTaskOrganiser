@@ -38,6 +38,8 @@ class SettingsController extends HtmxController
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
         $settingsIndex = new SettingsIndex($settingDataStr);
         
+        usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
+
 		$this->tpl->assign('settings', $settingsIndex);
 	}
 
@@ -51,6 +53,7 @@ class SettingsController extends HtmxController
         $maxtasks = $this->incomingRequest->get("maxtasks");
         $persistency = $this->incomingRequest->get("persistency");
         $shownbydefault = $this->incomingRequest->get("shownbydefault");
+        $order = $this->incomingRequest->get("order");
         $modules = $this->incomingRequest->get("modules");
 
         $userId = session('userdata.id');
@@ -66,6 +69,7 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
         $settingsIndex->indexes[$id]->persistency = $persistency;
         $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
+        $settingsIndex->indexes[$id]->order = $order;
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
@@ -86,6 +90,7 @@ class SettingsController extends HtmxController
         $maxtasks = $this->incomingRequest->get("maxtasks");
         $persistency = $this->incomingRequest->get("persistency");
         $shownbydefault = $this->incomingRequest->get("shownbydefault");
+        $order = $this->incomingRequest->get("order");
         $modules = $this->incomingRequest->get("modules");
 
         $userId = session('userdata.id');
@@ -98,6 +103,7 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
         $settingsIndex->indexes[$id]->persistency = $persistency;
         $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
+        $settingsIndex->indexes[$id]->order = $order;
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());

@@ -59,6 +59,8 @@ class WidgetController extends HtmxController
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
         $settingsIndex = new SettingsIndex($settingDataStr);        
 
+        usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
+
         // Return needed items
 		$this->tpl->assign('settings', $settingsIndex);
 		$this->tpl->assign('tasks', $tasks);

@@ -11,6 +11,7 @@ class SettingsModel
     public int $maxtasks;
     public int $persistency;
     public bool $shownbydefault;
+    public int $order;
 
     public $modules = array();
 }

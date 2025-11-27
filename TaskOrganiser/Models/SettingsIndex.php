@@ -17,6 +17,7 @@ class SettingsIndex
             $newItem->maxtasks = 10;
             $newItem->persistency = -1;
             $newItem->shownbydefault = true;
+            $newItem->order = 0;
             $newItem->modules = [];
             array_push($this->indexes, $newItem);
             return;

@@ -79,7 +79,7 @@
 
     <div class="tw-flex tw-flex-col" style="gap:0.5rem">
         @foreach ($settings->indexes as $setting)
-            <details class="settingDetails">
+            <details class="settingDetails" style="background-color:color-mix(in srgb, var(--secondary-background) 60%, transparent)">
                 <summary>{{$setting->name}}</summary>
                 <div class="tw-flex tw-flex-col" style="gap:0.5rem;margin-top:10px">
                     <form

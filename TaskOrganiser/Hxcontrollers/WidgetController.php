@@ -65,5 +65,6 @@ class WidgetController extends HtmxController
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());
 		$this->tpl->assign('priorityLabels', $this->ticketsService->getPriorityLabels());
+		$this->tpl->assign('expirations', $this->sortingService->GetCacheExpirations());
     }
 }

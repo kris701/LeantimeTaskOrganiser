@@ -171,4 +171,30 @@ class SortingService
 
         return $settings;
     }
+
+    function GetCacheExpirations() : array {
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settings = new SettingsIndex($settingDataStr);
+
+        $expirations = [];
+
+        foreach($settings->indexes as $setting){
+            $cacheKey = "user.{$userId}.{$setting->id}";
+            if ($setting->persistency > 0){
+                $cache = $this->cacheRepository->getCache($cacheKey);
+                if ($cache){
+                    $expires = new \DateTime($cache->expires, new \DateTimeZone('UTC'));
+                    $expirations[$setting->id] = $expires->format('r');
+                }
+                else
+                    $expirations[$setting->id] = "Always";
+            }
+            else
+                $expirations[$setting->id] = "Always";
+        }
+
+        return $expirations;
+    }
 }

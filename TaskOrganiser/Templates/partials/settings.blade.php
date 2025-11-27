@@ -234,20 +234,22 @@
     effortSortModuleDef = {
         "type":"effort",
         "map":{
-            "effort_id":0
+            "XS":5,
+            "S":1
         }
     }
     topNEffortSortModuleDef = {
         "type":"topneffort",
         "top": 2,
         "map":{
-            "effort_id":0
+            "XS":5,
+            "S":1
         }
     }
     prioritySortModuleDef = {
         "type":"priority",
         "map":{
-            "priority_id":0
+            "priority_name":0
         }
     }
     statusSortModuleDef = {
@@ -265,7 +267,7 @@
     milestoneSortModuleDef = {
         "type":"milestone",
         "map":{
-            "milestone_id":0
+            "milestone_name":0
         }
     }
 

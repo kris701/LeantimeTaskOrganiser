@@ -14,6 +14,23 @@ class TopNEffortSortModule extends BaseSortModule
 
     public function __construct($data) {
         $this->map = get_object_vars($data->map);
+        $keys = array_keys($this->map);
+        $newMap = [];
+        foreach($keys as $key){
+            if ($key == "XS")
+                $newMap[1] = $this->map[$key];
+            if ($key == "S")
+                $newMap[2] = $this->map[$key];
+            if ($key == "M")
+                $newMap[3] = $this->map[$key];
+            if ($key == "L")
+                $newMap[5] = $this->map[$key];
+            if ($key == "XL")
+                $newMap[8] = $this->map[$key];
+            if ($key == "XXL")
+                $newMap[13] = $this->map[$key];
+        }
+        $this->map = $newMap;
         $this->top = $data->top;
     }
 

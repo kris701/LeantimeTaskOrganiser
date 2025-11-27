@@ -65,7 +65,7 @@
 										style="align-content:center;text-align:center;width:10rem">
 										<span class="text">
 											@if(isset($priorityLabels[$ticket->priority]))
-												{{ $priorityLabels[$ticket->priority] }} ({{$ticket->priority}})
+												{{ $priorityLabels[$ticket->priority] }}
 											@else
 												No priority set
 											@endif
@@ -76,7 +76,7 @@
 										style="align-content:center;text-align:center;width:10rem">
 										<span class="text">
 											@if(isset($effortLabels[$ticket->storypoints]))
-												{{ $effortLabels[$ticket->storypoints] }} ({{$ticket->storypoints}})
+												{{ $effortLabels[$ticket->storypoints] }}
 											@else
 												No effort set
 											@endif

@@ -158,7 +158,7 @@ class SortingService
                             array_push($setting->modules, new ClientSortModule($moduleSetting));
                             break;
                         case 'project':
-                            array_push($setting->modules, new ProjectSortModule($moduleSetting));
+                            array_push($setting->modules, new ProjectSortModule($moduleSetting, $this->projectsService));
                             break;
                         case 'duedate':
                             array_push($setting->modules, new DueDateSortModule($moduleSetting));
@@ -167,7 +167,7 @@ class SortingService
                             array_push($setting->modules, new EffortSortModule($moduleSetting));
                             break;
                         case 'milestone':
-                            array_push($setting->modules, new MilestoneSortModule($moduleSetting));
+                            array_push($setting->modules, new MilestoneSortModule($moduleSetting, $this->ticketsService, $this->projectsService));
                             break;
                         case 'topneffort':
                             array_push($setting->modules, new TopNEffortSortModule($moduleSetting));

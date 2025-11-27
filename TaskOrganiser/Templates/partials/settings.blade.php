@@ -221,7 +221,7 @@
     clientSortModuleDef = {
         "type":"client",
         "map":{
-            "name":0
+            "client_name":0
         }
     }
     dueDateSortModuleDef = {
@@ -234,26 +234,26 @@
     effortSortModuleDef = {
         "type":"effort",
         "map":{
-            "0":0
+            "effort_id":0
         }
     }
     topNEffortSortModuleDef = {
         "type":"topneffort",
         "top": 2,
         "map":{
-            "0":0
+            "effort_id":0
         }
     }
     prioritySortModuleDef = {
         "type":"priority",
         "map":{
-            "0":0
+            "priority_id":0
         }
     }
     statusSortModuleDef = {
         "type":"status",
         "map":{
-            "0":0
+            "status_id":0
         }
     }
     projectSortModuleDef = {
@@ -265,7 +265,7 @@
     milestoneSortModuleDef = {
         "type":"milestone",
         "map":{
-            "0":0
+            "milestone_id":0
         }
     }
 

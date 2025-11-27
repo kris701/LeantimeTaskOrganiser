@@ -4,7 +4,7 @@ use Leantime\Core\Events\EventDispatcher;
 use Leantime\Plugins\TaskOrganiser\Listeners\SettingsTab;
 use Leantime\Plugins\TaskOrganiser\Listeners\SettingsTabContent;
 
-function addWidget($availableWidgets)
+function addTaskOrganiserWidget($availableWidgets)
 {
     $moduleManager = app()->make(\Leantime\Domain\Modulemanager\Services\Modulemanager::class);
     if ($moduleManager->isModuleAvailable('taskOrganiser')) {
@@ -26,9 +26,9 @@ function addWidget($availableWidgets)
 
     return $availableWidgets;
 }
-EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.availableWidgets', 'addWidget');
+EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.availableWidgets', 'addTaskOrganiserWidget');
 
-function addDefaultWidget($defaultWidgets, $params)
+function addDefaultTaskOrganiserWidget($defaultWidgets, $params)
 {
     $moduleManager = app()->make(\Leantime\Domain\Modulemanager\Services\Modulemanager::class);
     if ($moduleManager->isModuleAvailable('taskOrganiser')) {
@@ -38,7 +38,7 @@ function addDefaultWidget($defaultWidgets, $params)
 
     return $defaultWidgets;
 }
-EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.defaultWidgets', 'addDefaultWidget');
+EventDispatcher::add_filter_listener('leantime.domain.widgets.services.widgets.__construct.defaultWidgets', 'addDefaultTaskOrganiserWidget');
 
 EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabs', SettingsTab::class);
 EventDispatcher::add_event_listener('leantime.domain.users.templates.editOwn.tabsContent', SettingsTabContent::class);

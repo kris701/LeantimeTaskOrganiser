@@ -15,6 +15,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\ClientSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\DueDateSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\EffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\TopNEffortSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\ProjectSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsRadioSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsBoolSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsCheckboxSortModule;
@@ -154,6 +155,9 @@ class SortingService
                             break;
                         case 'client':
                             array_push($setting->modules, new ClientSortModule($moduleSetting));
+                            break;
+                        case 'project':
+                            array_push($setting->modules, new ProjectSortModule($moduleSetting));
                             break;
                         case 'duedate':
                             array_push($setting->modules, new DueDateSortModule($moduleSetting));

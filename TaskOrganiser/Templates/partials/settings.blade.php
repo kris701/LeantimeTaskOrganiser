@@ -61,6 +61,7 @@
                                     <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', topNEffortSortModuleDef)"/>
                                     <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', prioritySortModuleDef)"/>
                                     <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
+                                    <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', projectSortModuleDef)"/>
                                     <p>Custom Fields</p>
                                     <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_boolDef)"/>
                                     <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_checkboxDef)"/>
@@ -153,6 +154,7 @@
                                                 <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', topNEffortSortModuleDef)"/>
                                                 <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
                                                 <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
+                                                <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
                                                 <p>Custom Fields</p>
                                                 <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_boolDef)"/>
                                                 <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
@@ -249,6 +251,12 @@
     statusSortModuleDef = {
         "type":"status",
         "statusMap":{
+            "0":0
+        }
+    }
+    projectSortModuleDef = {
+        "type":"project",
+        "projectMap":{
             "0":0
         }
     }

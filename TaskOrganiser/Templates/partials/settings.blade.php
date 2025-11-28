@@ -54,19 +54,23 @@
                             <ul class="dropdown-menu">
                                 <div class="tw-flex tw-flex-col" style="gap:0.5rem;align-items:center;">
                                     <p>Add module definition</p>
-                                    <p>Common</p>
-                                    <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', clientSortModuleDef)"/>
-                                    <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', dueDateSortModuleDef)"/>
-                                    <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', effortSortModuleDef)"/>
-                                    <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', topNEffortSortModuleDef)"/>
-                                    <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', prioritySortModuleDef)"/>
-                                    <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
-                                    <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', projectSortModuleDef)"/>
-                                    <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', milestoneSortModuleDef)"/>
-                                    <p>Custom Fields</p>
-                                    <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_boolDef)"/>
-                                    <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_checkboxDef)"/>
-                                    <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_radioDef)"/>
+                                    @if(array_key_exists('common', $availableplugins) && $availableplugins['common'])
+                                        <p>Common</p>
+                                        <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', clientSortModuleDef)"/>
+                                        <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', dueDateSortModuleDef)"/>
+                                        <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', effortSortModuleDef)"/>
+                                        <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', topNEffortSortModuleDef)"/>
+                                        <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', prioritySortModuleDef)"/>
+                                        <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
+                                        <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', projectSortModuleDef)"/>
+                                        <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', milestoneSortModuleDef)"/>
+                                    @endif
+                                    @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
+                                        <p>Custom Fields</p>
+                                        <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_boolDef)"/>
+                                        <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_checkboxDef)"/>
+                                        <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_radioDef)"/>
+                                    @endif
                                 </div>
                             </ul>
                         </div>
@@ -148,19 +152,23 @@
                                         <ul class="dropdown-menu">
                                             <div class="tw-flex tw-flex-col" style="gap:0.5rem;align-items:center;">
                                                 <p>Add module definition</p>
-                                                <p>Common</p>
-                                                <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', clientSortModuleDef)"/>
-                                                <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', dueDateSortModuleDef)"/>
-                                                <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', effortSortModuleDef)"/>
-                                                <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', topNEffortSortModuleDef)"/>
-                                                <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
-                                                <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
-                                                <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
-                                                <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
-                                                <p>Custom Fields</p>
-                                                <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_boolDef)"/>
-                                                <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
-                                                <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_radioDef)"/>
+                                                @if(array_key_exists('common', $availableplugins) && $availableplugins['common'])
+                                                    <p>Common</p>
+                                                    <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', clientSortModuleDef)"/>
+                                                    <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', dueDateSortModuleDef)"/>
+                                                    <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', effortSortModuleDef)"/>
+                                                    <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', topNEffortSortModuleDef)"/>
+                                                    <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
+                                                    <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
+                                                    <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
+                                                    <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
+                                                @endif
+                                                @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
+                                                    <p>Custom Fields</p>
+                                                    <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_boolDef)"/>
+                                                    <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
+                                                    <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_radioDef)"/>
+                                                @endif
                                             </div>
                                         </ul>
                                     </div>

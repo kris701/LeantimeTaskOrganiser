@@ -8,19 +8,24 @@ use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 
+use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
+
 class SettingsController extends HtmxController
 {
     protected static string $view = 'taskorganiser::partials.settings';
 
     private ProjectService $projectsService;
     private SettingService $settingsService;
+    private PluginsManager $pluginsManager;
 
     public function init(
         ProjectService $projectsService,
         SettingService $settingsService,
+        PluginsManager $pluginsManager,
     ) {
         $this->projectsService = $projectsService;
         $this->settingsService = $settingsService;
+        $this->pluginsManager = $pluginsManager;
 
         session(['lastPage' => BASE_URL.'/dashboard/home']);
     }
@@ -41,6 +46,7 @@ class SettingsController extends HtmxController
         usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
 
 		$this->tpl->assign('settings', $settingsIndex);
+		$this->getEnabledPlugins();
 	}
 
     public function add(){
@@ -85,6 +91,7 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+        $this->getEnabledPlugins();
 
         $this->tpl->setNotification("Task list added!", 'success');
     }
@@ -129,6 +136,7 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+        $this->getEnabledPlugins();
 
         $this->tpl->setNotification("Task list saved!", 'success');
     }
@@ -150,7 +158,18 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+        $this->getEnabledPlugins();
 
         $this->tpl->setNotification("Task list deleted!", 'success');
+    }
+
+    private function getEnabledPlugins(){
+        $allEnabledPlugins = array_column(array_filter($this->pluginsManager->getEnabledPlugins(), function($v) {
+            return $v->enabled;
+        }), 'name');
+        $this->tpl->assign('availableplugins', array(
+            "common" => true,
+            "customfields" => in_array("Custom Fields", $allEnabledPlugins)
+        ));
     }
 }

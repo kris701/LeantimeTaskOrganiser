@@ -22,7 +22,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsBoolSortModu
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsCheckboxSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
-
+use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
 use Leantime\Core\Configuration\Environment;
 use Leantime\Core\Db\Db;
 
@@ -31,6 +31,7 @@ class SortingService
     private TicketService $ticketsService;
     private SettingService $settingsService;
     private ProjectService $projectsService;
+    private PluginsManager $pluginsManager;
     
     private CacheRepository $cacheRepository;
 
@@ -43,12 +44,14 @@ class SortingService
         ProjectService $projectsService,
         CacheRepository $cacheRepository,
         Db $db,
-        Environment $config
+        Environment $config,
+        PluginsManager $pluginsManager,
     ) {
         $this->ticketsService = $ticketsService;
         $this->settingsService = $settingsService;
         $this->projectsService = $projectsService;
         $this->cacheRepository = $cacheRepository;
+        $this->pluginsManager = $pluginsManager;
         $this->db = $db;
         $this->config = $config;
     }
@@ -141,6 +144,7 @@ class SortingService
         $sortingKey = "user.{$userId}.taskorganisersettings";
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
         $settings = new SettingsIndex($settingDataStr);
+        $enabledPlugins = $this->getEnabledPlugins();
 
         foreach($settings->indexes as $setting){
             $moduleSettings = $setting->modules;
@@ -148,38 +152,52 @@ class SortingService
             if ($moduleSettings != null){
                 foreach($moduleSettings as $moduleSetting){
                     switch($moduleSetting->type){
+                        // Common
                         case 'status':
-                            array_push($setting->modules, new StatusSortModule($moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new StatusSortModule($moduleSetting));
                             break;
                         case 'priority':
-                            array_push($setting->modules, new PrioritySortModule($moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new PrioritySortModule($moduleSetting));
                             break;
                         case 'client':
-                            array_push($setting->modules, new ClientSortModule($moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new ClientSortModule($moduleSetting));
                             break;
                         case 'project':
-                            array_push($setting->modules, new ProjectSortModule($moduleSetting, $this->projectsService));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new ProjectSortModule($moduleSetting, $this->projectsService));
                             break;
                         case 'duedate':
-                            array_push($setting->modules, new DueDateSortModule($moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new DueDateSortModule($moduleSetting));
                             break;
                         case 'effort':
-                            array_push($setting->modules, new EffortSortModule($moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new EffortSortModule($moduleSetting));
                             break;
                         case 'milestone':
-                            array_push($setting->modules, new MilestoneSortModule($moduleSetting, $this->ticketsService, $this->projectsService));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new MilestoneSortModule($moduleSetting, $this->ticketsService, $this->projectsService));
                             break;
                         case 'topneffort':
-                            array_push($setting->modules, new TopNEffortSortModule($moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new TopNEffortSortModule($moduleSetting));
                             break;
+
+                        // Custom fields
                         case 'customfields_radio':
-                            array_push($setting->modules, new CustomFieldsRadioSortModule($this->db, $this->config, $moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "customfields"))
+                                array_push($setting->modules, new CustomFieldsRadioSortModule($this->db, $this->config, $moduleSetting));
                             break;
                         case 'customfields_bool':
-                            array_push($setting->modules, new CustomFieldsBoolSortModule($this->db, $this->config, $moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "customfields"))
+                                array_push($setting->modules, new CustomFieldsBoolSortModule($this->db, $this->config, $moduleSetting));
                             break;
                         case 'customfields_checkbox':
-                            array_push($setting->modules, new CustomFieldsCheckboxSortModule($this->db, $this->config, $moduleSetting));
+                            if ($this->isPluginEnalbed($enabledPlugins, "customfields"))
+                                array_push($setting->modules, new CustomFieldsCheckboxSortModule($this->db, $this->config, $moduleSetting));
                             break;
                     }
                 }
@@ -213,5 +231,20 @@ class SortingService
         }
 
         return $expirations;
+    }
+
+    private function getEnabledPlugins() : array{
+        $allEnabledPlugins = array_column(array_filter($this->pluginsManager->getEnabledPlugins(), function($v) {
+            return $v->enabled;
+        }), 'name');
+        $availableplugins = array(
+            "common" => true,
+            "customfields" => in_array("Custom Fields", $allEnabledPlugins)
+        );
+        return $availableplugins;
+    }
+
+    private function isPluginEnalbed(array $availableplugins, string $key) : bool{
+        return array_key_exists($key, $availableplugins) && $availableplugins[$key];
     }
 }

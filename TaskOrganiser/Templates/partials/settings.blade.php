@@ -64,6 +64,7 @@
                                         <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
                                         <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', projectSortModuleDef)"/>
                                         <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', milestoneSortModuleDef)"/>
+                                        <input type="button" value="Created Within Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', createdWitinSortModuleDef)"/>
                                     @endif
                                     @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
                                         <p>Custom Fields</p>
@@ -162,6 +163,7 @@
                                                     <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
                                                     <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
                                                     <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
+                                                    <input type="button" value="Created Witin Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', createdWitinSortModuleDef)"/>
                                                 @endif
                                                 @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
                                                     <p>Custom Fields</p>
@@ -277,6 +279,11 @@
         "map":{
             "milestone_name":0
         }
+    }
+    createdWitinSortModuleDef = {
+        "type":"createdwithin",
+        "hours": 10,
+        "weight": 100
     }
 
     // Custom Fields

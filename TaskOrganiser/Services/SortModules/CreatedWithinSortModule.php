@@ -25,8 +25,6 @@ class CreatedWithinSortModule extends BaseSortModule
         $diff = date_diff($utcnow, $target);
         $hoursFrom = intval($diff->h + ($diff->days * 24));
 
-        var_dump($hoursFrom);
-
         if ($hoursFrom <= $this->hours)
             return $this->weight;
 

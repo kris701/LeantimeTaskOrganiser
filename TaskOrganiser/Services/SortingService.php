@@ -17,6 +17,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\EffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\TopNEffortSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\ProjectSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\MilestoneSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\CreatedWithinSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsRadioSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsBoolSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsCheckboxSortModule;
@@ -184,6 +185,10 @@ class SortingService
                         case 'topneffort':
                             if ($this->isPluginEnalbed($enabledPlugins, "common"))
                                 array_push($setting->modules, new TopNEffortSortModule($moduleSetting));
+                            break;
+                        case 'createdwithin':
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new CreatedWithinSortModule($moduleSetting));
                             break;
 
                         // Custom fields

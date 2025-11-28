@@ -29,20 +29,22 @@
 			</summary>
 			<div class="tw-flex tw-flex-col" style="gap:0.5rem;margin-top:10px">
 				<p>{{$setting->subtitle}}</p>
-				
-				<div class="ticketBox" style="cursor:default">
-					<div class="tw-flex tw-flex-row" style="gap:1rem">
-						<p style="align-content:center;text-align:center;width:3rem">Weight</p>
-						<p style="align-content:center;text-align:center;width:3rem">ID</p>
-						<p class="tw-flex-1">Name and Project</p>
-						<p style="align-content:center;text-align:center;width:10rem">Priority</p>
-						<p style="align-content:center;text-align:center;width:10rem">Effort</p>
-						<p style="align-content:center;text-align:center;width:10rem">Status</p>
+
+				@if(count($tasks[$setting->id]) == 0)
+					<p style="align-self:center;font-size:20px">🥳 You have no more tickets for this list!</p>
+				@else
+					<div class="ticketBox" style="cursor:default">
+						<div class="tw-flex tw-flex-row" style="gap:1rem">
+							<p style="align-content:center;text-align:center;width:3rem">Weight</p>
+							<p style="align-content:center;text-align:center;width:3rem">ID</p>
+							<p class="tw-flex-1">Name and Project</p>
+							<p style="align-content:center;text-align:center;width:10rem">Priority</p>
+							<p style="align-content:center;text-align:center;width:10rem">Effort</p>
+							<p style="align-content:center;text-align:center;width:10rem">Status</p>
+						</div>
 					</div>
-				</div>
-				<div id="ticketOrganiserContainer">
-					@foreach ($tasks[$setting->id] as $ticket)
-						@if ($ticket->weight >= 0)
+					<div id="ticketOrganiserContainer">
+						@foreach ($tasks[$setting->id] as $ticket)
 							<div class="ticketBox" style="cursor:default">
 								<div class="tw-flex tw-flex-row" style="gap:1rem">
 									<div style="align-content:center;text-align:center;width:3rem">
@@ -99,9 +101,9 @@
 									</div>
 								</div>
 							</div>
-						@endif
-					@endforeach
-				</div>
+						@endforeach
+					</div>
+				@endif
 			</div>
 		</details>
 	@endforeach

@@ -106,7 +106,7 @@ class SortingService
             }
             
             $newList = $this->CalculateTaskList($targetTasks, $setting);
-            $tickets[$setting->id] = $newList;
+            $tickets[$setting->id] = array_filter($newList, function($v){ return $v->weight >= 0; });
 
             // Save cache
             if ($setting->persistency > 0) {

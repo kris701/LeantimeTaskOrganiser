@@ -12,7 +12,7 @@ class SettingsIndex
         if ($data == "")
         {
             $this->indexes = [];
-            $newItem = new SettingsModel();
+            $newItem = new SettingsModel(array());
             $newItem->id = 0;
             $newItem->name = "New Task List";
             $newItem->subtitle = "The default task list";

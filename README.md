@@ -11,6 +11,9 @@ If you have the Custom Fields plugin, you can also use sort modules for Bool, Ch
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/e5cac1d5-de61-4b61-97d4-c576124c9040" />
 
+> [!WARNING]
+> If you disable, uninstall or update the plugin all caches and user settings will be reset!
+
 ## Configuration
 You can configure your task lists under Account Settings.
 There are a couple of fields that you can modify there:

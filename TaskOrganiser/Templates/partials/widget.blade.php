@@ -22,7 +22,7 @@
 					</form>
 					<div class="tw-flex tw-flex-col" style="margin:5px;align-items:center">
 						<p>Will be recalculated after</p>
-						<p>{{$expirations[$setting->id]}}</p>
+						<p id="expiration-{{$setting->id}}">Loading...</p>
 					</div>
 				</ul>
 			</div>
@@ -110,7 +110,20 @@
 </div>
 
 <script>
-	
+    jQuery(document).ready(function() {
+		var expirations = <?php echo json_encode($expirations); ?>;
+		var index = 0;
+		expirations.forEach(x => {
+			var targetId = "expiration-" + index;
+			var element = document.getElementById(targetId);
+			var date = new Date(Date.parse(x));
+			if (date != "Invalid Date")
+				element.innerText = date.toLocaleString();
+			else
+				element.innerText = x;
+			index++;
+		})
+    });
 </script>
 
 <style>

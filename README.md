@@ -20,9 +20,12 @@ There are a couple of fields that you can modify there:
     - Max Tasks: The maximum tasks to show on each calculation
     - Persistency: For how long the tasks in the list should persist before considering new tasks in the list. The way it works, is that when you calculate a task list, only those tasks that is shown will be considered for reevaluation or reprioritization on later updates. (-1 for always recalculate the list)
     - Always Show: If the task list should always be expanded in the widget
+    - Hide list when empty: If the task list should be hidden if there are no tasks in it.
     - Order: The order index of the list, a higher number means it will be earlier in the task lists
+* Item Selection
     - Use Tasks: If the list should consider normal Tasks
     - Use subtasks: If the list should consider sub-tasks
+    - Use bugs: If the list should consider bugs
 * Modules
     - A JSON file with the configurations for the modules
 

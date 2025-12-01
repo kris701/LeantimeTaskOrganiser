@@ -158,7 +158,7 @@ class SortingService
                         // Common
                         case 'status':
                             if ($this->isPluginEnalbed($enabledPlugins, "common"))
-                                array_push($setting->modules, new StatusSortModule($moduleSetting));
+                                array_push($setting->modules, new StatusSortModule($moduleSetting, $this->projectsService, $this->ticketsService));
                             break;
                         case 'priority':
                             if ($this->isPluginEnalbed($enabledPlugins, "common"))

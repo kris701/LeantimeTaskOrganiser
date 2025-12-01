@@ -290,7 +290,9 @@
     statusSortModuleDef = {
         "type":"status",
         "map":{
-            "status_id":0
+            "project_name":{
+                "status_name":0
+            }
         }
     }
     projectSortModuleDef = {

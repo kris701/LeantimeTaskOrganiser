@@ -28,10 +28,15 @@
                     <input name="shownbydefault" type="checkbox"/>
                 </div>
                 <div class="settingField">
+                    <p>Hide list when empty</p>
+                    <input name="hideifempty" type="checkbox"/>
+                </div>
+                <div class="settingField">
                     <p>Order</p>
                     <input name="order" type="number" value="0"/>
                 </div>
 
+                <p>Item Selection</p>
                 <div class="settingField">
                     <p>Use Tasks</p>
                     <input name="includetasks" type="checkbox"/>
@@ -39,6 +44,10 @@
                 <div class="settingField">
                     <p>Use SubTasks</p>
                     <input name="includesubtasks" type="checkbox"/>
+                </div>
+                <div class="settingField">
+                    <p>Use bugs</p>
+                    <input name="includebugs" type="checkbox"/>
                 </div>
 
                 <details>
@@ -118,10 +127,19 @@
                                 @endif
                             </div>
                             <div class="settingField">
+                                <p>Hide list when empty</p>
+                                @if($setting->hideifempty)
+                                    <input name="hideifempty" type="checkbox" checked value="true"/>
+                                @else
+                                    <input name="hideifempty" type="checkbox"/>
+                                @endif
+                            </div>
+                            <div class="settingField">
                                 <p>Order</p>
                                 <input name="order" type="number" value="{{$setting->order}}"/>
                             </div>
 
+                            <p>Item Selection</p>
                             <div class="settingField">
                                 <p>Use Tasks</p>
                                 @if($setting->includetasks)
@@ -130,13 +148,20 @@
                                     <input name="includetasks" type="checkbox"/>
                                 @endif
                             </div>
-
                             <div class="settingField">
                                 <p>Use SubTasks</p>
                                 @if($setting->includesubtasks)
                                     <input name="includesubtasks" type="checkbox" checked value="true"/>
                                 @else
                                     <input name="includesubtasks" type="checkbox"/>
+                                @endif
+                            </div>
+                            <div class="settingField">
+                                <p>Use Bugs</p>
+                                @if($setting->includebugs)
+                                    <input name="includebugs" type="checkbox" checked value="true"/>
+                                @else
+                                    <input name="includebugs" type="checkbox"/>
                                 @endif
                             </div>
 

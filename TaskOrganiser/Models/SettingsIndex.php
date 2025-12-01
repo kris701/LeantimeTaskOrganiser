@@ -2,6 +2,8 @@
 
 namespace Leantime\Plugins\TaskOrganiser\Models;
 
+use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
+
 class SettingsIndex
 {
     public array $indexes = array();
@@ -19,16 +21,23 @@ class SettingsIndex
             $newItem->persistency = -1;
             $newItem->shownbydefault = true;
             $newItem->order = 0;
+            $newItem->hideifempty = false;
 
             $newItem->includetasks = true;
             $newItem->includesubtasks = true;
+            $newItem->includebugs = false;
 
             $newItem->modules = array();
             array_push($this->indexes, $newItem);
             return;
         }
         $values = json_decode($data);
-        $this->indexes = $values->indexes ?? [];
+        $this->indexes = [];
+        if ($values->indexes != null){
+            foreach($values->indexes as $index){
+                array_push($this->indexes, new SettingsModel($index));
+            }
+        }
     }
 
     public function Serialize(){

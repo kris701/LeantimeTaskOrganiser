@@ -94,7 +94,7 @@
 												@if(isset($statusLabels[$ticket->projectId][$ticket->status]))
 													{{ $statusLabels[$ticket->projectId][$ticket->status]["name"] }}
 												@else
-													unknown
+													unknown	
 												@endif
 											</span>
 										</p>

@@ -90,6 +90,7 @@ class SortingService
             });
 
             // Check cache for existing
+            $hasExpired = true;
             $cacheKey = "user.{$userId}.{$setting->id}";
             if ($setting->persistency > 0){
                 $cache = $this->cacheRepository->getCache($cacheKey);
@@ -104,6 +105,7 @@ class SortingService
                                 return in_array((string)$value['id'], $cacheTasks); 
                             }
                         );
+                        $hasExpired = false;
                     }
                 }
             }
@@ -113,10 +115,16 @@ class SortingService
 
             // Save cache
             if ($setting->persistency > 0) {
-                $date_utc_modified = (clone $date_utc)->add(new \DateInterval("PT{$setting->persistency}H"));
                 $newCache = new CachedTaskList();
                 $newCache->id = $cacheKey;
-                $newCache->expires = $date_utc_modified->format('Y-m-d H:i:s');
+                if($hasExpired){
+                    $date_utc_modified = (clone $date_utc)->add(new \DateInterval("PT{$setting->persistency}H"));
+                    $newCache->expires = $date_utc_modified->format('c');
+                }
+                else {
+                    $cache = $this->cacheRepository->getCache($cacheKey);
+                    $newCache->expires = $cache->expires;
+                }
                 $newCache->tasklist = json_encode(array_map(function ($v) { return $v->id; }, $newList));
                 $this->cacheRepository->addCache($newCache);
             }
@@ -227,8 +235,7 @@ class SortingService
             if ($setting->persistency > 0){
                 $cache = $this->cacheRepository->getCache($cacheKey);
                 if ($cache){
-                    $expires = new \DateTime($cache->expires, new \DateTimeZone('UTC'));
-                    $expirations[$setting->id] = $expires->format('r');
+                    $expirations[$setting->id] = $cache->expires;
                 }
                 else
                     $expirations[$setting->id] = "Always";

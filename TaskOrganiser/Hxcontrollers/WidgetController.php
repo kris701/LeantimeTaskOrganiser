@@ -59,10 +59,16 @@ class WidgetController extends HtmxController
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
         $settingsIndex = new SettingsIndex($settingDataStr);        
 
-        usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
+        $indexes = array_filter($settingsIndex->indexes, function($v) use($tasks){
+            if (count($tasks[$v->id]) == 0 && $v->hideifempty == true)
+                return false;
+            return true;
+        });
+
+        usort($indexes, function($a, $b) { return $b->order - $a->order; });
 
         // Return needed items
-		$this->tpl->assign('settings', $settingsIndex);
+		$this->tpl->assign('settings', $indexes);
 		$this->tpl->assign('tasks', $tasks);
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());

@@ -84,6 +84,8 @@ class SortingService
                         return true;
                     if ($setting->includesubtasks && $v['type'] == "subtask")
                         return true;
+                    if ($setting->includebugs && $v['type'] == "bug")
+                        return true;
                     return false;
             });
 

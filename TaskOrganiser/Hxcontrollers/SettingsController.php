@@ -61,9 +61,11 @@ class SettingsController extends HtmxController
         $persistency = $this->incomingRequest->get("persistency");
         $shownbydefault = $this->incomingRequest->get("shownbydefault");
         $order = $this->incomingRequest->get("order");
+        $hideifempty = $this->incomingRequest->get("hideifempty");
 
         $includetasks = $this->incomingRequest->get("includetasks");
         $includesubtasks = $this->incomingRequest->get("includesubtasks");
+        $includebugs = $this->incomingRequest->get("includebugs");
 
         $modules = $this->incomingRequest->get("modules");
 
@@ -73,7 +75,7 @@ class SettingsController extends HtmxController
         $settingsIndex = new SettingsIndex($settingDataStr);
 
         $id = max(array_map( function($v) { return $v->id; } ,$settingsIndex->indexes)) + 1;
-        $settingsIndex->indexes[$id] = new SettingsModel();
+        $settingsIndex->indexes[$id] = new SettingsModel(array());
         $settingsIndex->indexes[$id]->id = $id;
         $settingsIndex->indexes[$id]->name = $name;
         $settingsIndex->indexes[$id]->subtitle = $subtitle;
@@ -82,9 +84,11 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->persistency = $persistency;
         $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
         $settingsIndex->indexes[$id]->order = $order;
+        $settingsIndex->indexes[$id]->hideifempty = isset($hideifempty);
 
         $settingsIndex->indexes[$id]->includetasks = isset($includetasks);
         $settingsIndex->indexes[$id]->includesubtasks = isset($includesubtasks);
+        $settingsIndex->indexes[$id]->includebugs = isset($includebugs);
 
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 
@@ -109,9 +113,11 @@ class SettingsController extends HtmxController
         $persistency = $this->incomingRequest->get("persistency");
         $shownbydefault = $this->incomingRequest->get("shownbydefault");
         $order = $this->incomingRequest->get("order");
+        $hideifempty = $this->incomingRequest->get("hideifempty");
 
         $includetasks = $this->incomingRequest->get("includetasks");
         $includesubtasks = $this->incomingRequest->get("includesubtasks");
+        $includebugs = $this->incomingRequest->get("includebugs");
 
         $modules = $this->incomingRequest->get("modules");
 
@@ -127,9 +133,11 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->persistency = $persistency;
         $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
         $settingsIndex->indexes[$id]->order = $order;
+        $settingsIndex->indexes[$id]->hideifempty = isset($hideifempty);
 
         $settingsIndex->indexes[$id]->includetasks = isset($includetasks);
         $settingsIndex->indexes[$id]->includesubtasks = isset($includesubtasks);
+        $settingsIndex->indexes[$id]->includebugs = isset($includebugs);
 
         $settingsIndex->indexes[$id]->modules = json_decode($modules);
 

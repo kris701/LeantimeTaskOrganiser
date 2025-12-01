@@ -1,7 +1,7 @@
 <div id="taskOrganiserBody"
 	class="tw-w-full tw-h-full tw-overflow-x-hidden"
 >
-	@foreach ($settings->indexes as $setting)
+	@foreach ($settings as $setting)
 		<details class="taskDetails" style="background-color:color-mix(in srgb, var(--secondary-background) 60%, transparent)" {{$setting->shownbydefault ? 'open' : ''}}>
 			<summary>{{$setting->name}}
 			<div class="inlineDropDownContainer tw-float-right">

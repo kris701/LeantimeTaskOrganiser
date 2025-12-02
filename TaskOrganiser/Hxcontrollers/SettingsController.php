@@ -35,8 +35,6 @@ class SettingsController extends HtmxController
             throw new Error('This endpoint only supports GET requests!');
         }
 
-        $params = $this->incomingRequest->query->all();
-
         $userId = session('userdata.id');
         $sortingKey = "user.{$userId}.taskorganisersettings";
         //$this->settingsService->saveSetting($sortingKey, (new SettingsIndex(""))->Serialize());
@@ -46,6 +44,7 @@ class SettingsController extends HtmxController
         usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
 
 		$this->tpl->assign('settings', $settingsIndex);
+        $this->tpl->assign('exportData', null);
 		$this->getEnabledPlugins();
 	}
 
@@ -95,6 +94,7 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+        $this->tpl->assign('exportData', null);
         $this->getEnabledPlugins();
 
         $this->tpl->setNotification("Task list added!", 'success');
@@ -144,6 +144,7 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+        $this->tpl->assign('exportData', null);
         $this->getEnabledPlugins();
 
         $this->tpl->setNotification("Task list saved!", 'success');
@@ -166,6 +167,7 @@ class SettingsController extends HtmxController
         $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
         
         $this->tpl->assign('settings', $settingsIndex);
+        $this->tpl->assign('exportData', null);
         $this->getEnabledPlugins();
 
         $this->tpl->setNotification("Task list deleted!", 'success');
@@ -179,5 +181,44 @@ class SettingsController extends HtmxController
             "common" => true,
             "customfields" => in_array("Custom Fields", $allEnabledPlugins)
         ));
+    }
+
+    public function export(){
+        if (! $this->incomingRequest->getMethod() == 'GET') {
+            throw new Error('This endpoint only supports GET requests');
+        }
+
+        $id = $this->incomingRequest->get("id");
+
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+
+        $this->get();
+        $this->tpl->assign('exportData', json_encode($settingsIndex->indexes[$id]));
+    }
+
+    public function import(){
+        if (! $this->incomingRequest->getMethod() == 'POST') {
+            throw new Error('This endpoint only supports POST requests');
+        }
+
+        $targetFile = $_FILES['file'];
+        $text = file_get_contents($targetFile["tmp_name"]);
+        $object = json_decode($text);
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+
+        $maxId = max(array_column($settingsIndex->indexes, 'id'));
+        $object->id = $maxId + 1;
+
+        $settingsIndex->indexes[$object->id] = $object;
+
+        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+
+        $this->get();
     }
 }

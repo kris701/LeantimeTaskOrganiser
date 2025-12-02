@@ -1,9 +1,16 @@
 <div id="settingsContainer" class="tw-flex tw-flex-col" style="gap:0.5rem">
     <p>Edit your settings for how the Task Organiser widget should work.</p>
     
-    <button id="addContainerButton" class="btn btn-outline" style="width:auto !important;">Add</button>
+    <input id="uploadinput" type="file" name="file" accept=".json" style="display:none;" hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/import"
+        hx-trigger="change"
+        hx-target="#settingsContainer"
+        hx-swap="innerhtml"
+        hx-encoding="multipart/form-data"/>
+    <button class="btn btn-outline" style="width:auto !important;" onclick="document.getElementById('uploadinput').click()"><i class="fa fa-upload"></i> Import</button>
+
+    <button id="addContainerButton" class="btn btn-outline" style="width:auto !important;"><i class="fa fa-plus"></i> Add</button>
     <div id="addContainer" class="tw-flex tw-flex-col newSettings" style="display:none;gap:0.5rem;">
-        <button id="cancelAddContainerButton" class="btn btn-outline" style="width:auto !important;">Cancel</button>
+        <button id="cancelAddContainerButton" class="btn btn-outline" style="width:auto !important;"><i class="fa fa-cancel"></i> Cancel</button>
         <form
             hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/add"
             hx-trigger="submit"
@@ -65,23 +72,23 @@
                                     <p>Add module definition</p>
                                     @if(array_key_exists('common', $availableplugins) && $availableplugins['common'])
                                         <p>Common</p>
-                                        <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', clientSortModuleDef)"/>
-                                        <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', dueDateSortModuleDef)"/>
-                                        <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', effortSortModuleDef)"/>
-                                        <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', topNEffortSortModuleDef)"/>
-                                        <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', prioritySortModuleDef)"/>
-                                        <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', statusSortModuleDef)"/>
-                                        <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', projectSortModuleDef)"/>
-                                        <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', milestoneSortModuleDef)"/>
-                                        <input type="button" value="Created Within Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', createdWitinSortModuleDef)"/>
-                                        <input type="button" value="Type Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', typeSortModuleDef)"/>
+                                        <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', clientSortModuleDef)"/>
+                                        <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', dueDateSortModuleDef)"/>
+                                        <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', effortSortModuleDef)"/>
+                                        <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', topNEffortSortModuleDef)"/>
+                                        <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', prioritySortModuleDef)"/>
+                                        <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', statusSortModuleDef)"/>
+                                        <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', projectSortModuleDef)"/>
+                                        <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', milestoneSortModuleDef)"/>
+                                        <input type="button" value="Created Within Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', createdWitinSortModuleDef)"/>
+                                        <input type="button" value="Type Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', typeSortModuleDef)"/>
                                         <input type="button" value="Static Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', staticSortModuleDef)"/>
                                     @endif
                                     @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
                                         <p>Custom Fields</p>
-                                        <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_boolDef)"/>
-                                        <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_checkboxDef)"/>
-                                        <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', customFields_radioDef)"/>
+                                        <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', customFields_boolDef)"/>
+                                        <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', customFields_checkboxDef)"/>
+                                        <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', customFields_radioDef)"/>
                                     @endif
                                 </div>
                             </ul>
@@ -90,7 +97,7 @@
                     </div>
                 </details>
                 
-                <input type="submit" value="Add" style="width:auto !important;"/>
+                <button class="btn btn-outline" style="width:auto !important;"><i class="fa fa-plus"></i> Add</button>
             </div>
         </form>
     </div>
@@ -182,23 +189,23 @@
                                                 <p>Add module definition</p>
                                                 @if(array_key_exists('common', $availableplugins) && $availableplugins['common'])
                                                     <p>Common</p>
-                                                    <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', clientSortModuleDef)"/>
-                                                    <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', dueDateSortModuleDef)"/>
-                                                    <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', effortSortModuleDef)"/>
-                                                    <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', topNEffortSortModuleDef)"/>
-                                                    <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
-                                                    <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
-                                                    <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
-                                                    <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
-                                                    <input type="button" value="Created Witin Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', createdWitinSortModuleDef)"/>
-                                                    <input type="button" value="Type Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', typeSortModuleDef)"/>
+                                                    <input type="button" value="Client Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', clientSortModuleDef)"/>
+                                                    <input type="button" value="Due Date Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', dueDateSortModuleDef)"/>
+                                                    <input type="button" value="Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', effortSortModuleDef)"/>
+                                                    <input type="button" value="Top N Effort Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', topNEffortSortModuleDef)"/>
+                                                    <input type="button" value="Priority Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', prioritySortModuleDef)"/>
+                                                    <input type="button" value="Status Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', statusSortModuleDef)"/>
+                                                    <input type="button" value="Project Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', projectSortModuleDef)"/>
+                                                    <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
+                                                    <input type="button" value="Created Witin Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', createdWitinSortModuleDef)"/>
+                                                    <input type="button" value="Type Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', typeSortModuleDef)"/>
                                                     <input type="button" value="Static Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', staticSortModuleDef)"/>
                                                 @endif
                                                 @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
                                                     <p>Custom Fields</p>
-                                                    <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_boolDef)"/>
-                                                    <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
-                                                    <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', customFields_radioDef)"/>
+                                                    <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', customFields_boolDef)"/>
+                                                    <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
+                                                    <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', customFields_radioDef)"/>
                                                 @endif
                                             </div>
                                         </ul>
@@ -207,7 +214,7 @@
                                 </div>
                             </details>
 
-                            <input type="submit" value="Save" style="width:auto !important;"/>
+                            <button class="btn btn-outline" style="width:auto !important;"><i class="fa fa-save"></i> Save</button>
                         </div>
                     </form>
                     <form
@@ -218,13 +225,40 @@
                     >
                         <div class="tw-flex tw-flex-col">
                             <input name="id" type="hidden" value="{{$setting->id}}"/>
-                            <input type="submit" value="Delete" style="width:auto !important;"/>
+                            <button class="btn btn-danger-outline" style="width:auto !important;"><i class="fa fa-trash"></i> Delete</button>
+                        </div>
+                    </form>
+                    <form
+                        hx-delete="{{ BASE_URL }}/taskOrganiser/settingsController/export"
+                        hx-trigger="submit"
+                        hx-target="#settingsContainer"
+                        hx-swap="innerhtml"
+                    >
+                        <div class="tw-flex tw-flex-col">
+                            <input name="id" type="hidden" value="{{$setting->id}}"/>
+                            <button class="btn btn-outline" style="width:auto !important;"><i class="fa fa-download"></i> Export</button>
                         </div>
                     </form>
                 </div>
             </details>
         @endforeach
     </div>
+
+    @if($exportData != null)
+        <script>
+            var data = <?php echo $exportData; ?>;
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, undefined, 4)));
+            element.setAttribute('download', 'export-' + data.id + ".json");
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        </script>
+    @endif
 </div>
 
 <script>
@@ -240,13 +274,15 @@
 
         document.getElementById('addContainerButton').addEventListener('click', function () {
             jQuery("#addContainer").show();
+            jQuery("#addContainerButton").hide();
         });
         document.getElementById('cancelAddContainerButton').addEventListener('click', function () {
             jQuery("#addContainer").hide();
+            jQuery("#addContainerButton").show();
         });
     });
 
-    function test(elementName, target){
+    function format(elementName, target){
         var element = document.getElementById(elementName);
         var text = element.value;
         if (text == null || text == "")

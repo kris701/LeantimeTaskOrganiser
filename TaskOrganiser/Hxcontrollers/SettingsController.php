@@ -26,20 +26,10 @@ class SettingsController extends HtmxController
         $this->projectsService = $projectsService;
         $this->settingsService = $settingsService;
         $this->pluginsManager = $pluginsManager;
-
-        session(['lastPage' => BASE_URL.'/dashboard/home']);
     }
 	
 	public function get(){
-		if (! $this->incomingRequest->getMethod() == 'GET') {
-            throw new Error('This endpoint only supports GET requests!');
-        }
-
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        //$this->settingsService->saveSetting($sortingKey, (new SettingsIndex(""))->Serialize());
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
+        $settingsIndex = $this->GetSettingsIndex();
         
         usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
 
@@ -49,132 +39,79 @@ class SettingsController extends HtmxController
 	}
 
     public function add(){
-        if (! $this->incomingRequest->getMethod() == 'POST') {
-            throw new Error('This endpoint only supports POST requests');
-        }
-
-        $name = $this->incomingRequest->get("name");
-        $subtitle = $this->incomingRequest->get("subtitle");
-        
-        $maxtasks = $this->incomingRequest->get("maxtasks");
-        $persistency = $this->incomingRequest->get("persistency");
-        $shownbydefault = $this->incomingRequest->get("shownbydefault");
-        $order = $this->incomingRequest->get("order");
-        $hideifempty = $this->incomingRequest->get("hideifempty");
-        $showweights = $this->incomingRequest->get("showweights");
-
-        $includetasks = $this->incomingRequest->get("includetasks");
-        $includesubtasks = $this->incomingRequest->get("includesubtasks");
-        $includebugs = $this->incomingRequest->get("includebugs");
-
-        $modules = $this->incomingRequest->get("modules");
-
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
+        $settingsIndex = $this->GetSettingsIndex();
 
         $id = max(array_map( function($v) { return $v->id; } ,$settingsIndex->indexes)) + 1;
         $settingsIndex->indexes[$id] = new SettingsModel(array());
         $settingsIndex->indexes[$id]->id = $id;
-        $settingsIndex->indexes[$id]->name = $name;
-        $settingsIndex->indexes[$id]->subtitle = $subtitle;
 
-        $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
-        $settingsIndex->indexes[$id]->persistency = $persistency;
-        $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
-        $settingsIndex->indexes[$id]->order = $order;
-        $settingsIndex->indexes[$id]->hideifempty = isset($hideifempty);
-        $settingsIndex->indexes[$id]->showweights = isset($showweights);
-
-        $settingsIndex->indexes[$id]->includetasks = isset($includetasks);
-        $settingsIndex->indexes[$id]->includesubtasks = isset($includesubtasks);
-        $settingsIndex->indexes[$id]->includebugs = isset($includebugs);
-
-        $settingsIndex->indexes[$id]->modules = json_decode($modules);
-
-        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+        $this->SetSettingsDataByRequest($settingsIndex);
+        $this->SaveSettingsIndex($settingsIndex);
         
-        $this->tpl->assign('settings', $settingsIndex);
-        $this->tpl->assign('exportData', null);
-        $this->getEnabledPlugins();
-
         $this->tpl->setNotification("Task list added!", 'success');
+        $this->get();
     }
 
     public function save(){
-        if (! $this->incomingRequest->getMethod() == 'POST') {
-            throw new Error('This endpoint only supports POST requests');
-        }
-
-        $id = $this->incomingRequest->get("id");
-        $name = $this->incomingRequest->get("name");
-        $subtitle = $this->incomingRequest->get("subtitle");
-
-        $maxtasks = $this->incomingRequest->get("maxtasks");
-        $persistency = $this->incomingRequest->get("persistency");
-        $shownbydefault = $this->incomingRequest->get("shownbydefault");
-        $order = $this->incomingRequest->get("order");
-        $hideifempty = $this->incomingRequest->get("hideifempty");
-        $showweights = $this->incomingRequest->get("showweights");
-
-        $includetasks = $this->incomingRequest->get("includetasks");
-        $includesubtasks = $this->incomingRequest->get("includesubtasks");
-        $includebugs = $this->incomingRequest->get("includebugs");
-
-        $modules = $this->incomingRequest->get("modules");
-
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
-
-        $settingsIndex->indexes[$id]->name = $name;
-        $settingsIndex->indexes[$id]->subtitle = $subtitle;
-
-        $settingsIndex->indexes[$id]->maxtasks = $maxtasks;
-        $settingsIndex->indexes[$id]->persistency = $persistency;
-        $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
-        $settingsIndex->indexes[$id]->order = $order;
-        $settingsIndex->indexes[$id]->hideifempty = isset($hideifempty);
-        $settingsIndex->indexes[$id]->showweights = isset($showweights);
-
-        $settingsIndex->indexes[$id]->includetasks = isset($includetasks);
-        $settingsIndex->indexes[$id]->includesubtasks = isset($includesubtasks);
-        $settingsIndex->indexes[$id]->includebugs = isset($includebugs);
-
-        $settingsIndex->indexes[$id]->modules = json_decode($modules);
-
-        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+        $settingsIndex = $this->GetSettingsIndex();
+        $this->SetSettingsDataByRequest($settingsIndex);
+        $this->SaveSettingsIndex($settingsIndex);
         
-        $this->tpl->assign('settings', $settingsIndex);
-        $this->tpl->assign('exportData', null);
-        $this->getEnabledPlugins();
-
         $this->tpl->setNotification("Task list saved!", 'success');
+        $this->get();
     }
 
     public function delete(){
-        if (! $this->incomingRequest->getMethod() == 'DELETE') {
-            throw new Error('This endpoint only supports DELETE requests');
-        }
-
         $id = $this->incomingRequest->get("id");
 
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
-
+        $settingsIndex = $this->GetSettingsIndex();
         unset($settingsIndex->indexes[$id]);
-
-        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+        $this->SaveSettingsIndex($settingsIndex);
         
-        $this->tpl->assign('settings', $settingsIndex);
-        $this->tpl->assign('exportData', null);
-        $this->getEnabledPlugins();
-
         $this->tpl->setNotification("Task list deleted!", 'success');
+        $this->get();
+    }
+
+    public function export(){
+        $id = $this->incomingRequest->get("id");
+
+        $settingsIndex = $this->GetSettingsIndex();
+
+        $this->get();
+        $this->tpl->assign('exportData', json_encode($settingsIndex->indexes[$id]));
+    }
+
+    public function importFile(){
+        $targetFile = $_FILES['file'];
+        $text = file_get_contents($targetFile["tmp_name"]);
+        $object = json_decode($text);
+        
+        $settingsIndex = $this->GetSettingsIndex();
+
+        $maxId = max(array_column($settingsIndex->indexes, 'id'));
+        $object->id = $maxId + 1;
+
+        $settingsIndex->indexes[$object->id] = $object;
+
+        $this->SaveSettingsIndex($settingsIndex);
+
+        $this->get();
+    }
+
+    public function import(){
+        $text = $this->incomingRequest->get("data");
+        $object = json_decode($text);
+        
+        $settingsIndex = $this->GetSettingsIndex();
+
+        $maxId = max(array_column($settingsIndex->indexes, 'id'));
+        $object->id = $maxId + 1;
+
+        $settingsIndex->indexes[$object->id] = $object;
+
+        $this->SaveSettingsIndex($settingsIndex);
+
+        $this->get();
     }
 
     private function getEnabledPlugins(){
@@ -187,64 +124,36 @@ class SettingsController extends HtmxController
         ));
     }
 
-    public function export(){
-        if (! $this->incomingRequest->getMethod() == 'GET') {
-            throw new Error('This endpoint only supports GET requests');
-        }
+    private function GetSettingsIndex() : SettingsIndex{
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+        return $settingsIndex;
+    }
 
+    private function SaveSettingsIndex(SettingsIndex $index){
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $this->settingsService->saveSetting($sortingKey, $index->Serialize());
+    }
+
+    private function SetSettingsDataByRequest(SettingsIndex $index){
         $id = $this->incomingRequest->get("id");
+        $index->indexes[$id]->name = $this->incomingRequest->get("name");
+        $index->indexes[$id]->subtitle = $this->incomingRequest->get("subtitle");
 
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
+        $index->indexes[$id]->maxtasks = $this->incomingRequest->get("maxtasks");
+        $index->indexes[$id]->persistency = $this->incomingRequest->get("persistency");
+        $index->indexes[$id]->shownbydefault = null !== ($this->incomingRequest->get("shownbydefault"));
+        $index->indexes[$id]->order = $this->incomingRequest->get("order");
+        $index->indexes[$id]->hideifempty = null !== ($this->incomingRequest->get("hideifempty"));
+        $index->indexes[$id]->showweights = null !== ($this->incomingRequest->get("showweights"));
 
-        $this->get();
-        $this->tpl->assign('exportData', json_encode($settingsIndex->indexes[$id]));
-    }
+        $index->indexes[$id]->includetasks = null !== ($this->incomingRequest->get("includetasks"));
+        $index->indexes[$id]->includesubtasks = null !== ($this->incomingRequest->get("includesubtasks"));
+        $index->indexes[$id]->includebugs = null !== ($this->incomingRequest->get("includebugs"));
 
-    public function importFile(){
-        if (! $this->incomingRequest->getMethod() == 'POST') {
-            throw new Error('This endpoint only supports POST requests');
-        }
-
-        $targetFile = $_FILES['file'];
-        $text = file_get_contents($targetFile["tmp_name"]);
-        $object = json_decode($text);
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
-
-        $maxId = max(array_column($settingsIndex->indexes, 'id'));
-        $object->id = $maxId + 1;
-
-        $settingsIndex->indexes[$object->id] = $object;
-
-        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
-
-        $this->get();
-    }
-
-    public function import(){
-        if (! $this->incomingRequest->getMethod() == 'POST') {
-            throw new Error('This endpoint only supports POST requests');
-        }
-
-        $text = $this->incomingRequest->get("data");
-        $object = json_decode($text);
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
-
-        $maxId = max(array_column($settingsIndex->indexes, 'id'));
-        $object->id = $maxId + 1;
-
-        $settingsIndex->indexes[$object->id] = $object;
-
-        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
-
-        $this->get();
+        $index->indexes[$id]->modules = json_decode($this->incomingRequest->get("modules"));
     }
 }

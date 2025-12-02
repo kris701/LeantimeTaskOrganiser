@@ -20,7 +20,7 @@ class CreatedWithinSortModule extends BaseSortModule
             return 0;
 
         $utcnow = new \DateTime('now', new \DateTimeZone('UTC'));
-        $target = new \DateTime($ticket->date);
+        $target = new \DateTime($ticket->date, new \DateTimeZone('UTC'));
 
         $diff = date_diff($utcnow, $target);
         $hoursFrom = intval($diff->h + ($diff->days * 24));

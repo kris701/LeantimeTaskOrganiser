@@ -7,9 +7,9 @@ You can use sort modules to order based on values such as Status, Project, Effor
 
 If you have the Custom Fields plugin, you can also use sort modules for Bool, Checkbox and Radio custom fields.
 
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/92d22947-af87-44f7-b8dd-9720e1161dcc" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/a3020fce-2199-4fe6-b6b5-20a583795385" />
 
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/e5cac1d5-de61-4b61-97d4-c576124c9040" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/2e407718-4d8f-4bb1-8921-9dc62f0c9cef" />
 
 > [!WARNING]
 > If you disable, uninstall or update the plugin all caches and user settings will be reset!

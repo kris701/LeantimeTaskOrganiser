@@ -75,6 +75,7 @@
                                         <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', milestoneSortModuleDef)"/>
                                         <input type="button" value="Created Within Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', createdWitinSortModuleDef)"/>
                                         <input type="button" value="Type Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', typeSortModuleDef)"/>
+                                        <input type="button" value="Static Module" class="btn btn-outline" style="width:80% !important;" onclick="test('newModuleArea', staticSortModuleDef)"/>
                                     @endif
                                     @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
                                         <p>Custom Fields</p>
@@ -191,6 +192,7 @@
                                                     <input type="button" value="Milestone Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', milestoneSortModuleDef)"/>
                                                     <input type="button" value="Created Witin Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', createdWitinSortModuleDef)"/>
                                                     <input type="button" value="Type Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', typeSortModuleDef)"/>
+                                                    <input type="button" value="Static Module" class="btn btn-outline" style="width:80% !important;" onclick="test('modulearea-{{$setting->id}}', staticSortModuleDef)"/>
                                                 @endif
                                                 @if(array_key_exists('customfields', $availableplugins) && $availableplugins['customfields'])
                                                     <p>Custom Fields</p>
@@ -319,6 +321,10 @@
         "map":{
             "type_name":0
         }
+    }
+    staticSortModuleDef = {
+        "type":"static",
+        "weight":10
     }
 
     // Custom Fields

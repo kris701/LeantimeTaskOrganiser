@@ -199,13 +199,35 @@ class SettingsController extends HtmxController
         $this->tpl->assign('exportData', json_encode($settingsIndex->indexes[$id]));
     }
 
-    public function import(){
+    public function importFile(){
         if (! $this->incomingRequest->getMethod() == 'POST') {
             throw new Error('This endpoint only supports POST requests');
         }
 
         $targetFile = $_FILES['file'];
         $text = file_get_contents($targetFile["tmp_name"]);
+        $object = json_decode($text);
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+
+        $maxId = max(array_column($settingsIndex->indexes, 'id'));
+        $object->id = $maxId + 1;
+
+        $settingsIndex->indexes[$object->id] = $object;
+
+        $this->settingsService->saveSetting($sortingKey, $settingsIndex->Serialize());
+
+        $this->get();
+    }
+
+    public function import(){
+        if (! $this->incomingRequest->getMethod() == 'POST') {
+            throw new Error('This endpoint only supports POST requests');
+        }
+
+        $text = $this->incomingRequest->get("data");
         $object = json_decode($text);
         $userId = session('userdata.id');
         $sortingKey = "user.{$userId}.taskorganisersettings";

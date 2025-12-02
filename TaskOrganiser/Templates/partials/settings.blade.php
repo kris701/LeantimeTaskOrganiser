@@ -1,14 +1,35 @@
 <div id="settingsContainer" class="tw-flex tw-flex-col" style="gap:0.5rem">
     <p>Edit your settings for how the Task Organiser widget should work.</p>
     
-    <input id="uploadinput" type="file" name="file" accept=".json" style="display:none;" hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/import"
+    <input id="uploadinput" type="file" name="file" accept=".json" style="display:none;" hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/importFile"
         hx-trigger="change"
         hx-target="#settingsContainer"
         hx-swap="innerhtml"
         hx-encoding="multipart/form-data"/>
     <button class="btn btn-outline" style="width:auto !important;" onclick="document.getElementById('uploadinput').click()"><i class="fa fa-upload"></i> Import</button>
 
-    <button id="addContainerButton" class="btn btn-outline" style="width:auto !important;"><i class="fa fa-plus"></i> Add</button>
+    <div class="tw-flex tw-flex-row" id="addContainerButtonView">
+        <button id="addContainerButton" class="btn btn-outline" style="width:100% !important;"><i class="fa fa-plus"></i> Add</button>
+        <div class="inlineDropDownContainer tw-float-right" style="margin:5px">
+            <a href="javascript:void(0);" class="dropdown-toggle ticketDropDown editHeadline" data-toggle="dropdown">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+            </a>
+            <ul class="dropdown-menu" style="width:500px">
+                <div class="tw-flex tw-flex-col" style="gap:0.5rem;align-items:center;">
+                    <input id="uploadPresetInput" type="text" name="data" style="display:none;" hx-post="{{ BASE_URL }}/taskOrganiser/settingsController/import"
+                        hx-trigger="change"
+                        hx-target="#settingsContainer"
+                        hx-swap="innerhtml"/>
+                    <p><b>Presets</b></p>
+                    
+                    <div class="presetField">
+                        <p>This is an empty preset with no modules in it.</p>
+                        <button class="btn btn-outline" style="width:80% !important;" onclick="document.getElementById('uploadPresetInput').value = JSON.stringify(emptyPreset);htmx.trigger('#uploadPresetInput', 'change')"><i class="fa fa-plus"></i> Add</button>    
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
     <div id="addContainer" class="tw-flex tw-flex-col newSettings" style="display:none;gap:0.5rem;">
         <button id="cancelAddContainerButton" class="btn btn-outline" style="width:auto !important;"><i class="fa fa-cancel"></i> Cancel</button>
         <form
@@ -21,44 +42,52 @@
                 <input name="name" style="width:auto !important;" type="text" placeholder="Name"/>
                 <textarea name="subtitle" style="width:auto !important;" placeholder="Description"></textarea>
 
-                <p>General</p>
-                <div class="settingField">
-                    <p>Max Tasks</p>
-                    <input name="maxtasks" type="number" value="10"/>
-                </div>
-                <div class="settingField">
-                    <p>Persistency (hours)</p>
-                    <input name="persistency" type="number" value="-1"/>
-                </div>
-                <div class="settingField">
-                    <p>Always Show</p>
-                    <input name="shownbydefault" type="checkbox"/>
-                </div>
-                <div class="settingField">
-                    <p>Hide list when empty</p>
-                    <input name="hideifempty" type="checkbox"/>
-                </div>
-                <div class="settingField">
-                    <p>Order</p>
-                    <input name="order" type="number" value="0"/>
-                </div>
-
-                <p>Item Selection</p>
-                <div class="settingField">
-                    <p>Use Tasks</p>
-                    <input name="includetasks" type="checkbox"/>
-                </div>
-                <div class="settingField">
-                    <p>Use SubTasks</p>
-                    <input name="includesubtasks" type="checkbox"/>
-                </div>
-                <div class="settingField">
-                    <p>Use bugs</p>
-                    <input name="includebugs" type="checkbox"/>
-                </div>
+                <details>
+                    <summary style="height:2rem;align-content:center;cursor:pointer">
+                        General
+                    </summary>
+                    <div class="settingField">
+                        <p>Max Tasks</p>
+                        <input name="maxtasks" type="number" value="10"/>
+                    </div>
+                    <div class="settingField">
+                        <p>Persistency (hours)</p>
+                        <input name="persistency" type="number" value="-1"/>
+                    </div>
+                    <div class="settingField">
+                        <p>Always Show</p>
+                        <input name="shownbydefault" type="checkbox"/>
+                    </div>
+                    <div class="settingField">
+                        <p>Hide list when empty</p>
+                        <input name="hideifempty" type="checkbox"/>
+                    </div>
+                    <div class="settingField">
+                        <p>Order</p>
+                        <input name="order" type="number" value="0"/>
+                    </div>
+                </details>
 
                 <details>
-                    <summary style="height:2rem;align-content:center">
+                    <summary style="height:2rem;align-content:center;cursor:pointer">
+                        Item Selection
+                    </summary>
+                    <div class="settingField">
+                        <p>Use Tasks</p>
+                        <input name="includetasks" type="checkbox"/>
+                    </div>
+                    <div class="settingField">
+                        <p>Use SubTasks</p>
+                        <input name="includesubtasks" type="checkbox"/>
+                    </div>
+                    <div class="settingField">
+                        <p>Use bugs</p>
+                        <input name="includebugs" type="checkbox"/>
+                    </div>
+                </details>
+
+                <details>
+                    <summary style="height:2rem;align-content:center;cursor:pointer">
                         Modules
                     </summary>
                     <div style="text-align:center">
@@ -118,61 +147,69 @@
                             <input name="name" style="width:auto !important;" type="text" value="{{$setting->name}}"/>
                             <textarea name="subtitle" style="width:auto !important;">{{$setting->subtitle}}</textarea>
 
-                            <p>General</p>
-                            <div class="settingField">
-                                <p>Max Tasks</p>
-                                <input name="maxtasks" type="number" value="{{$setting->maxtasks}}"/>
-                            </div>
-                            <div class="settingField">
-                                <p>Persistency (hours)</p>
-                                <input name="persistency" type="number" value="{{$setting->persistency}}"/>
-                            </div>
-                            <div class="settingField">
-                                <p>Always Show</p>
-                                @if($setting->shownbydefault)
-                                    <input name="shownbydefault" type="checkbox" checked value="true"/>
-                                @else
-                                    <input name="shownbydefault" type="checkbox"/>
-                                @endif
-                            </div>
-                            <div class="settingField">
-                                <p>Hide list when empty</p>
-                                @if($setting->hideifempty)
-                                    <input name="hideifempty" type="checkbox" checked value="true"/>
-                                @else
-                                    <input name="hideifempty" type="checkbox"/>
-                                @endif
-                            </div>
-                            <div class="settingField">
-                                <p>Order</p>
-                                <input name="order" type="number" value="{{$setting->order}}"/>
-                            </div>
+                            <details>
+                                <summary style="height:2rem;align-content:center">
+                                    General
+                                </summary>
+                                <div class="settingField">
+                                    <p>Max Tasks</p>
+                                    <input name="maxtasks" type="number" value="{{$setting->maxtasks}}"/>
+                                </div>
+                                <div class="settingField">
+                                    <p>Persistency (hours)</p>
+                                    <input name="persistency" type="number" value="{{$setting->persistency}}"/>
+                                </div>
+                                <div class="settingField">
+                                    <p>Always Show</p>
+                                    @if($setting->shownbydefault)
+                                        <input name="shownbydefault" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="shownbydefault" type="checkbox"/>
+                                    @endif
+                                </div>
+                                <div class="settingField">
+                                    <p>Hide list when empty</p>
+                                    @if($setting->hideifempty)
+                                        <input name="hideifempty" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="hideifempty" type="checkbox"/>
+                                    @endif
+                                </div>
+                                <div class="settingField">
+                                    <p>Order</p>
+                                    <input name="order" type="number" value="{{$setting->order}}"/>
+                                </div>
+                            </details>
 
-                            <p>Item Selection</p>
-                            <div class="settingField">
-                                <p>Use Tasks</p>
-                                @if($setting->includetasks)
-                                    <input name="includetasks" type="checkbox" checked value="true"/>
-                                @else
-                                    <input name="includetasks" type="checkbox"/>
-                                @endif
-                            </div>
-                            <div class="settingField">
-                                <p>Use SubTasks</p>
-                                @if($setting->includesubtasks)
-                                    <input name="includesubtasks" type="checkbox" checked value="true"/>
-                                @else
-                                    <input name="includesubtasks" type="checkbox"/>
-                                @endif
-                            </div>
-                            <div class="settingField">
-                                <p>Use Bugs</p>
-                                @if($setting->includebugs)
-                                    <input name="includebugs" type="checkbox" checked value="true"/>
-                                @else
-                                    <input name="includebugs" type="checkbox"/>
-                                @endif
-                            </div>
+                            <details>
+                                <summary style="height:2rem;align-content:center">
+                                    Item Selection
+                                </summary>
+                                <div class="settingField">
+                                    <p>Use Tasks</p>
+                                    @if($setting->includetasks)
+                                        <input name="includetasks" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="includetasks" type="checkbox"/>
+                                    @endif
+                                </div>
+                                <div class="settingField">
+                                    <p>Use SubTasks</p>
+                                    @if($setting->includesubtasks)
+                                        <input name="includesubtasks" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="includesubtasks" type="checkbox"/>
+                                    @endif
+                                </div>
+                                <div class="settingField">
+                                    <p>Use Bugs</p>
+                                    @if($setting->includebugs)
+                                        <input name="includebugs" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="includebugs" type="checkbox"/>
+                                    @endif
+                                </div>
+                            </details>
 
                             <details>
                                 <summary style="height:2rem;align-content:center">
@@ -274,11 +311,11 @@
 
         document.getElementById('addContainerButton').addEventListener('click', function () {
             jQuery("#addContainer").show();
-            jQuery("#addContainerButton").hide();
+            jQuery("#addContainerButtonView").hide();
         });
         document.getElementById('cancelAddContainerButton').addEventListener('click', function () {
             jQuery("#addContainer").hide();
-            jQuery("#addContainerButton").show();
+            jQuery("#addContainerButtonView").show();
         });
     });
 
@@ -385,6 +422,23 @@
         }
     }
 
+    // Presets
+    emptyPreset = {
+        "id": 0,
+        "name": "Empty",
+        "subtitle": "An empty preset",
+        "maxtasks": 5,
+        "persistency": -1,
+        "shownbydefault": true,
+        "order": 0,
+        "hideifempty": false,
+        "includetasks": true,
+        "includesubtasks": true,
+        "includebugs": false,
+        "modules": [
+        ]
+    }
+
 </script>
 
 <style>
@@ -433,5 +487,19 @@
 
     .settingDetails summary {
         cursor: pointer;
+    }
+
+    .presetField {
+        display:flex;
+        flex-direction: column;
+        width: 90%;
+        padding: 5px;
+        border: 1px solid var(--main-border-color);
+        border-radius: var(--box-radius);
+        box-shadow: var(--regular-shadow);
+        align-items: center;
+        text-align: center;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
 </style>

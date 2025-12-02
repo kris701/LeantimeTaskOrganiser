@@ -19,6 +19,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\ProjectSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\MilestoneSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CreatedWithinSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\TypeSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\StaticSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsRadioSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsBoolSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFieldsCheckboxSortModule;
@@ -204,6 +205,10 @@ class SortingService
                         case 'type':
                             if ($this->isPluginEnalbed($enabledPlugins, "common"))
                                 array_push($setting->modules, new TypeSortModule($moduleSetting));
+                            break;
+                        case 'static':
+                            if ($this->isPluginEnalbed($enabledPlugins, "common"))
+                                array_push($setting->modules, new StaticSortModule($moduleSetting));
                             break;
 
                         // Custom fields

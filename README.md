@@ -25,6 +25,7 @@ There are a couple of fields that you can modify there:
     - Always Show: If the task list should always be expanded in the widget
     - Hide list when empty: If the task list should be hidden if there are no tasks in it.
     - Order: The order index of the list, a higher number means it will be earlier in the task lists
+    - Show Weights: If you should be able to see the weight of each task in the widget.
 * Item Selection
     - Use Tasks: If the list should consider normal Tasks
     - Use subtasks: If the list should consider sub-tasks

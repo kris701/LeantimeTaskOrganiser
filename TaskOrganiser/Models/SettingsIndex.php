@@ -22,6 +22,7 @@ class SettingsIndex
             $newItem->shownbydefault = true;
             $newItem->order = 0;
             $newItem->hideifempty = false;
+            $newItem->showweights = true;
 
             $newItem->includetasks = true;
             $newItem->includesubtasks = true;

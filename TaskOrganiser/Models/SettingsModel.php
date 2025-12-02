@@ -13,6 +13,7 @@ class SettingsModel
     public bool $shownbydefault;
     public int $order;
     public bool $hideifempty;
+    public bool $showweights;
 
     public bool $includetasks;
     public bool $includesubtasks;
@@ -30,6 +31,7 @@ class SettingsModel
         $this->shownbydefault = $data->shownbydefault ?? true;
         $this->order = $data->order ?? 0;
         $this->hideifempty = $data->hideifempty ?? false;
+        $this->showweights = $data->showweights ?? false;
 
         $this->includetasks = $data->includetasks ?? true;
         $this->includesubtasks = $data->includesubtasks ?? false;

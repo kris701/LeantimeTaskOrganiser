@@ -35,7 +35,9 @@
 				@else
 					<div class="ticketBox" style="cursor:default">
 						<div class="tw-flex tw-flex-row" style="gap:1rem">
-							<p style="align-content:center;text-align:center;width:3rem">Weight</p>
+							@if($setting->showweights)
+								<p style="align-content:center;text-align:center;width:3rem">Weight</p>
+							@endif
 							<p style="align-content:center;text-align:center;width:3rem">ID</p>
 							<p class="tw-flex-1">Name and Project</p>
 							<p style="align-content:center;text-align:center;width:10rem">Priority</p>
@@ -47,9 +49,11 @@
 						@foreach ($tasks[$setting->id] as $ticket)
 							<div class="ticketBox" style="cursor:default">
 								<div class="tw-flex tw-flex-row" style="gap:1rem">
-									<div style="align-content:center;text-align:center;width:3rem">
-										<span>{{ $ticket->weight }}</span>
-									</div>	
+									@if($setting->showweights)
+										<div style="align-content:center;text-align:center;width:3rem">
+											<span>{{ $ticket->weight }}</span>
+										</div>	
+									@endif
 
 									<div style="align-content:center;text-align:center;width:3rem">
 										<span>#{{ $ticket->id }}</span>

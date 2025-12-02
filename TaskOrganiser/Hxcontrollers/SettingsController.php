@@ -61,6 +61,7 @@ class SettingsController extends HtmxController
         $shownbydefault = $this->incomingRequest->get("shownbydefault");
         $order = $this->incomingRequest->get("order");
         $hideifempty = $this->incomingRequest->get("hideifempty");
+        $showweights = $this->incomingRequest->get("showweights");
 
         $includetasks = $this->incomingRequest->get("includetasks");
         $includesubtasks = $this->incomingRequest->get("includesubtasks");
@@ -84,6 +85,7 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
         $settingsIndex->indexes[$id]->order = $order;
         $settingsIndex->indexes[$id]->hideifempty = isset($hideifempty);
+        $settingsIndex->indexes[$id]->showweights = isset($showweights);
 
         $settingsIndex->indexes[$id]->includetasks = isset($includetasks);
         $settingsIndex->indexes[$id]->includesubtasks = isset($includesubtasks);
@@ -114,6 +116,7 @@ class SettingsController extends HtmxController
         $shownbydefault = $this->incomingRequest->get("shownbydefault");
         $order = $this->incomingRequest->get("order");
         $hideifempty = $this->incomingRequest->get("hideifempty");
+        $showweights = $this->incomingRequest->get("showweights");
 
         $includetasks = $this->incomingRequest->get("includetasks");
         $includesubtasks = $this->incomingRequest->get("includesubtasks");
@@ -134,6 +137,7 @@ class SettingsController extends HtmxController
         $settingsIndex->indexes[$id]->shownbydefault = isset($shownbydefault);
         $settingsIndex->indexes[$id]->order = $order;
         $settingsIndex->indexes[$id]->hideifempty = isset($hideifempty);
+        $settingsIndex->indexes[$id]->showweights = isset($showweights);
 
         $settingsIndex->indexes[$id]->includetasks = isset($includetasks);
         $settingsIndex->indexes[$id]->includesubtasks = isset($includesubtasks);

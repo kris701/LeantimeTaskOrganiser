@@ -70,6 +70,10 @@
                         <p>Order</p>
                         <input name="order" type="number" value="0"/>
                     </div>
+                    <div class="settingField">
+                        <p>Show weights</p>
+                        <input name="showweights" type="checkbox"/>
+                    </div>
                 </details>
 
                 <details>
@@ -182,6 +186,14 @@
                                 <div class="settingField">
                                     <p>Order</p>
                                     <input name="order" type="number" value="{{$setting->order}}"/>
+                                </div>
+                                <div class="settingField">
+                                    <p>Show weights</p>
+                                    @if($setting->showweights)
+                                        <input name="showweights" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="showweights" type="checkbox"/>
+                                    @endif
                                 </div>
                             </details>
 
@@ -436,6 +448,7 @@
         "shownbydefault": true,
         "order": 0,
         "hideifempty": false,
+        "showweights": false,
         "includetasks": true,
         "includesubtasks": true,
         "includebugs": false,
@@ -451,6 +464,7 @@
         "shownbydefault": true,
         "order": 999,
         "hideifempty": true,
+        "showweights": false,
         "includetasks": true,
         "includesubtasks": true,
         "includebugs": true,

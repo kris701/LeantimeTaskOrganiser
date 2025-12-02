@@ -26,6 +26,10 @@
                         <p>This is an empty preset with no modules in it.</p>
                         <button class="btn btn-outline" style="width:80% !important;" onclick="document.getElementById('uploadPresetInput').value = JSON.stringify(emptyPreset);htmx.trigger('#uploadPresetInput', 'change')"><i class="fa fa-plus"></i> Add</button>    
                     </div>
+                    <div class="presetField">
+                        <p>This preset is a task list that shows tasks created or edited within the last 2 hours and are set to critical.</p>
+                        <button class="btn btn-outline" style="width:80% !important;" onclick="document.getElementById('uploadPresetInput').value = JSON.stringify(newCriticalPreset);htmx.trigger('#uploadPresetInput', 'change')"><i class="fa fa-plus"></i> Add</button>    
+                    </div>
                 </div>
             </ul>
         </div>
@@ -436,6 +440,36 @@
         "includesubtasks": true,
         "includebugs": false,
         "modules": [
+        ]
+    }
+    newCriticalPreset = {
+        "id": 0,
+        "name": "New Critical",
+        "subtitle": "These tasks must me completed soon!",
+        "maxtasks": 5,
+        "persistency": -1,
+        "shownbydefault": true,
+        "order": 999,
+        "hideifempty": true,
+        "includetasks": true,
+        "includesubtasks": true,
+        "includebugs": true,
+        "modules": [
+            {
+                "type":"static",
+                "weight":-2
+            },
+            {
+                "type":"createdwithin",
+                "hours": 2,
+                "weight": 1
+            },
+            {
+                "type":"priority",
+                "map":{
+                    "Critical":1
+                }
+            }
         ]
     }
 

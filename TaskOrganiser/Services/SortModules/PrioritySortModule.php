@@ -15,15 +15,15 @@ class PrioritySortModule extends BaseSortModule
         $newMap = [];
         foreach($keys as $key){
             if ($key == "Critical")
-                $newMap[1] = $this->map[$key];
+                $newMap["1"] = $this->map[$key];
             if ($key == "High")
-                $newMap[2] = $this->map[$key];
+                $newMap["2"] = $this->map[$key];
             if ($key == "Medium")
-                $newMap[3] = $this->map[$key];
+                $newMap["3"] = $this->map[$key];
             if ($key == "Low")
-                $newMap[5] = $this->map[$key];
+                $newMap["5"] = $this->map[$key];
             if ($key == "Lowest")
-                $newMap[8] = $this->map[$key];
+                $newMap["8"] = $this->map[$key];
         }
         $this->map = $newMap;
     }

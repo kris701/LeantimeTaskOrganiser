@@ -10,7 +10,7 @@ class StaticSortModule extends BaseSortModule
     public int $weight;
 
     public function __construct($data) {
-        $this->map = $data->weight;
+        $this->weight = $data->weight;
     }
 
     public function Calculate(TicketModel $ticket) : int{

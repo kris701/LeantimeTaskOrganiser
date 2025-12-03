@@ -39,10 +39,22 @@ class StrategySortModule extends BaseSortModule
         }
         $newMap = [];
         foreach($projects as $project){
-            if (array_key_exists($project['parentId'], $newStrategyMap))
-                $newMap[$project['id']] = $newStrategyMap[$project['parentId']];
+            $strategyParent = $this->FindStrategyParentOrNull($project, $projects, $newStrategyMap);
+            if ($strategyParent != null)
+                $newMap[$project['id']] = $newStrategyMap[$strategyParent];
         }
         $this->map = $newMap;
+    }
+
+    private function FindStrategyParentOrNull($project, $projects, $newStrategyMap) {
+        if (array_key_exists($project['parentId'], $newStrategyMap))
+            return $project['parentId'];
+
+        foreach($projects as $subProject)
+            if ($project['parentId'] == $subProject['id'])
+                return $this->FindStrategyParentOrNull($subProject, $projects, $newStrategyMap);
+
+        return null;
     }
 
     public function Calculate(TicketModel $ticket) : int{

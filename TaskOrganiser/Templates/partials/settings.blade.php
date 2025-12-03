@@ -74,6 +74,10 @@
                         <p>Show weights</p>
                         <input name="showweights" type="checkbox"/>
                     </div>
+                    <div class="settingField">
+                        <p>Allow Ignoring</p>
+                        <input name="allowignoring" type="checkbox"/>
+                    </div>
                 </details>
 
                 <details>
@@ -201,6 +205,14 @@
                                         <input name="showweights" type="checkbox" checked value="true"/>
                                     @else
                                         <input name="showweights" type="checkbox"/>
+                                    @endif
+                                </div>
+                                <div class="settingField">
+                                    <p>Allow Ignoring</p>
+                                    @if($setting->allowignoring)
+                                        <input name="allowignoring" type="checkbox" checked value="true"/>
+                                    @else
+                                        <input name="allowignoring" type="checkbox"/>
                                     @endif
                                 </div>
                             </details>
@@ -481,6 +493,7 @@
         "order": 0,
         "hideifempty": false,
         "showweights": false,
+        "allowignoring":false,
         "includetasks": true,
         "includesubtasks": true,
         "includebugs": false,
@@ -497,6 +510,7 @@
         "order": 999,
         "hideifempty": true,
         "showweights": false,
+        "allowignoring":false,
         "includetasks": true,
         "includesubtasks": true,
         "includebugs": true,

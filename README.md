@@ -31,6 +31,7 @@ There are a couple of fields that you can modify there:
     - **Hide list when empty**: If the task list should be hidden if there are no tasks in it.
     - **Order**: The order index of the list, a higher number means it will be earlier in the task lists
     - **Show Weights**: If you should be able to see the weight of each task in the widget.
+    - **Allow Ignoring**: (This is only relevant if **Persistency** is larger than 0) If you should be allowed to ignore a task in the task list.
 * **Item Selection**
     - **Use Tasks**: If the list should consider normal Tasks
     - **Use subtasks**: If the list should consider sub-tasks

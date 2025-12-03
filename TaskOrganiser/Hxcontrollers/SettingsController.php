@@ -7,7 +7,7 @@ use Leantime\Domain\Setting\Services\Setting as SettingService;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
-
+use Leantime\Plugins\TaskOrganiser\Repositories\CacheRepository;
 use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
 
 class SettingsController extends HtmxController
@@ -17,15 +17,18 @@ class SettingsController extends HtmxController
     private ProjectService $projectsService;
     private SettingService $settingsService;
     private PluginsManager $pluginsManager;
+    private CacheRepository $cacheRepository;
 
     public function init(
         ProjectService $projectsService,
         SettingService $settingsService,
         PluginsManager $pluginsManager,
+        CacheRepository $cacheRepository,
     ) {
         $this->projectsService = $projectsService;
         $this->settingsService = $settingsService;
         $this->pluginsManager = $pluginsManager;
+        $this->cacheRepository = $cacheRepository;
     }
 	
 	public function get(){
@@ -55,6 +58,7 @@ class SettingsController extends HtmxController
     public function save(){
         $settingsIndex = $this->GetSettingsIndex();
         $this->SetSettingsDataByRequest($settingsIndex);
+        $this->ClearCache();
         $this->SaveSettingsIndex($settingsIndex);
         
         $this->tpl->setNotification("Task list saved!", 'success');
@@ -151,11 +155,19 @@ class SettingsController extends HtmxController
         $index->indexes[$id]->order = $this->incomingRequest->get("order");
         $index->indexes[$id]->hideifempty = null !== ($this->incomingRequest->get("hideifempty"));
         $index->indexes[$id]->showweights = null !== ($this->incomingRequest->get("showweights"));
+        $index->indexes[$id]->allowignoring = null !== ($this->incomingRequest->get("allowignoring"));
 
         $index->indexes[$id]->includetasks = null !== ($this->incomingRequest->get("includetasks"));
         $index->indexes[$id]->includesubtasks = null !== ($this->incomingRequest->get("includesubtasks"));
         $index->indexes[$id]->includebugs = null !== ($this->incomingRequest->get("includebugs"));
 
         $index->indexes[$id]->modules = json_decode($this->incomingRequest->get("modules"));
+    }
+
+    private function ClearCache(){
+        $id = $this->incomingRequest->get("id");
+        $userId = session('userdata.id');
+        $cacheKey = "user.{$userId}.{$id}";
+        $this->cacheRepository->deleteCache($cacheKey);
     }
 }

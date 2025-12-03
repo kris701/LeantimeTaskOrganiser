@@ -8,46 +8,66 @@ use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 use Leantime\Plugins\TaskOrganiser\Services\SortingService;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
+use Leantime\Plugins\TaskOrganiser\Repositories\CacheRepository;
 
 class WidgetController extends HtmxController
 {
     protected static string $view = 'taskorganiser::partials.widget';
 
-    private ProjectService $projectsService;
     private TicketService $ticketsService;
     private SortingService $sortingService;
     private Setting $settingsService;
+    private CacheRepository $cacheRepository;
 
     public function init(
-        ProjectService $projectsService,
         TicketService $ticketsService,
         SortingService $sortingService,
         Setting $settingsService,
+        CacheRepository $cacheRepository,
     ) {
-        $this->projectsService = $projectsService;
         $this->ticketsService = $ticketsService;
         $this->sortingService = $sortingService;
         $this->settingsService = $settingsService;
+        $this->cacheRepository = $cacheRepository;
 
         session(['lastPage' => BASE_URL.'/dashboard/home']);
     }
 	
 	public function get(){
-		if (! $this->incomingRequest->getMethod() == 'GET') {
-            throw new Error('This endpoint only supports GET requests!');
-        }
-
         $this->GetData();
 	}
 
     public function clearCache(){
-        if (! $this->incomingRequest->getMethod() == 'DELETE') {
-            throw new Error('This endpoint only supports DELETE requests!');
-        }
-
         $id = $this->incomingRequest->get("id");
 
         $this->sortingService->clearCache($id);
+        $this->GetData();
+    }
+
+    public function ignoreTask(){
+        $taskId = $this->incomingRequest->get("taskId");
+        $settingId = $this->incomingRequest->get("settingId");
+
+        $userId = session('userdata.id');
+        $sortingKey = "user.{$userId}.taskorganisersettings";
+        $settingDataStr = $this->settingsService->getSetting($sortingKey);
+        $settingsIndex = new SettingsIndex($settingDataStr);
+        $setting = $settingsIndex->indexes[$settingId];
+
+        if ($setting != null && $setting->allowignoring == true){
+            $cacheKey = "user.{$userId}.{$setting->id}";
+            $cache = $this->cacheRepository->getCache($cacheKey);
+            if ($cache){
+                $cacheTasks = json_decode($cache->tasklist);
+                $newCacheTasks = [];
+                foreach($cacheTasks as $id)
+                    if ($id != $taskId)
+                        array_push($newCacheTasks, $id);
+                $cache->tasklist = json_encode($newCacheTasks);
+                $this->cacheRepository->addCache($cache);
+            }
+        }
+
         $this->GetData();
     }
 
@@ -57,7 +77,7 @@ class WidgetController extends HtmxController
 
         $sortingKey = "user.{$userId}.taskorganisersettings";
         $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);        
+        $settingsIndex = new SettingsIndex($settingDataStr);
 
         $indexes = array_filter($settingsIndex->indexes, function($v) use($tasks){
             if (count($tasks[$v->id]) == 0 && $v->hideifempty == true)

@@ -131,6 +131,10 @@
                                         <p>Strategies</p>
                                         <input type="button" value="Strategy Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', strategies_strategyDef)"/>
                                     @endif
+                                    @if(array_key_exists('plans', $availableplugins) && $availableplugins['plans'])
+                                        <p>Plans</p>
+                                        <input type="button" value="Plan Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', plans_planDef)"/>
+                                    @endif
                                 </div>
                             </ul>
                         </div>
@@ -267,6 +271,10 @@
                                                 @if(array_key_exists('strategies', $availableplugins) && $availableplugins['strategies'])
                                                     <p>Strategies</p>
                                                     <input type="button" value="Strategy Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', strategies_strategyDef)"/>
+                                                @endif
+                                                @if(array_key_exists('plans', $availableplugins) && $availableplugins['plans'])
+                                                    <p>Plans</p>
+                                                    <input type="button" value="Plan Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', plans_planDef)"/>
                                                 @endif
                                             </div>
                                         </ul>
@@ -451,6 +459,14 @@
         "type":"strategies_strategy",
         "map":{
             "strategy_name":0
+        }
+    }
+
+    // Plans
+    plans_planDef = {
+        "type":"plans_plan",
+        "map":{
+            "plan_name":0
         }
     }
 

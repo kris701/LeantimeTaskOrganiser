@@ -24,6 +24,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomField
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomFieldsBoolSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomFieldsCheckboxSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\Strategies\StrategySortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\Plans\PlanSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
@@ -235,6 +236,12 @@ class SortingService
                             if ($this->isPluginEnalbed($enabledPlugins, "strategies"))
                                 array_push($setting->modules, new StrategySortModule($this->db, $this->config, $this->language, $moduleSetting));
                             break;
+
+                        // Plans
+                        case 'plans_plan':
+                            if ($this->isPluginEnalbed($enabledPlugins, "plans"))
+                                array_push($setting->modules, new PlanSortModule($this->db, $this->config, $this->language, $moduleSetting));
+                            break;
                     }
                 }
             }
@@ -275,7 +282,8 @@ class SortingService
         $availableplugins = array(
             "common" => true,
             "customfields" => in_array("Custom Fields", $allEnabledPlugins),
-            "strategies" => in_array("Leantime Strategies", $allEnabledPlugins)
+            "strategies" => in_array("Leantime Strategies", $allEnabledPlugins),
+            "plans" => in_array("Program Plans", $allEnabledPlugins)
         );
         return $availableplugins;
     }

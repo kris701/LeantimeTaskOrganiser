@@ -55,7 +55,18 @@
 										</div>	
 									@endif
 
-									<div style="align-content:center;text-align:center;width:3rem">
+									<div  class="tw-flex tw-flex-col" style="align-content:center;text-align:center;width:3rem">
+										<small>
+											@if($ticket->type == "task")
+												Task
+											@elseif($ticket->type == "subtask")
+												Subtask
+											@elseif($ticket->type == "bug")
+												Bug
+											@else
+												Unknown
+											@endif
+										</small>
 										<span>#{{ $ticket->id }}</span>
 									</div>
 

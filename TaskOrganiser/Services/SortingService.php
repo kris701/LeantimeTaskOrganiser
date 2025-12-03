@@ -74,7 +74,7 @@ class SortingService
     public function Calculate() : array {
         $userId = session('userdata.id');
         $searchCriteria = array(
-            "type"=>"task,subtask",
+            "type"=>"task,subtask,bug",
             "users"=>$userId
         );
         $tasks = $this->ticketsService->getAll($searchCriteria);

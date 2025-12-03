@@ -1,6 +1,6 @@
 <?php
 
-namespace Leantime\Plugins\TaskOrganiser\Services\SortModules;
+namespace Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields;
 
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
@@ -12,10 +12,11 @@ use Leantime\Plugins\CustomFields\Contracts\FieldTypeEnum;
 use Leantime\Core\Configuration\Environment;
 use Leantime\Core\Db\Db;
 
-class CustomFieldsRadioSortModule extends BaseSortModule
+class CustomFieldsBoolSortModule extends BaseSortModule
 {
     public string $name;
-    public array $map = [];
+    public int $trueWeight = 0;
+    public int $falseWeight = 0;
     private CustomFieldsService $customFieldsService;
 
     public function __construct(
@@ -25,7 +26,8 @@ class CustomFieldsRadioSortModule extends BaseSortModule
     ) {
         $this->customFieldsService = new CustomFieldsService(new CustomFieldsRepo($db), $config);
         $this->name = $data->name;
-        $this->map = get_object_vars($data->map);
+        $this->trueWeight = $data->trueWeight;
+        $this->falseWeight = $data->falseWeight;
     }
 
     public function Calculate(TicketModel $ticket) : int{
@@ -35,16 +37,11 @@ class CustomFieldsRadioSortModule extends BaseSortModule
         });
         if ($targetFields != null && count($targetFields) > 0){
             $targetField = array_values($targetFields)[0];
-            if ($targetField->type != FieldTypeEnum::RADIO)
+            if ($targetField->type != FieldTypeEnum::BOOLEAN)
                 return 0;
-            if ($targetField->value != ""){
-                if (array_key_exists($targetField->value, $this->map)){
-                    $value = $this->map[$targetField->value];
-                    if ($value != null){
-                        return $value;
-                    }
-                }
-            }
+            if ($targetField->value == "on")
+                return $this->trueWeight;
+            return $this->falseWeight;            
         }
 
         return 0;

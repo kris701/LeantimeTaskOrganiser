@@ -1,6 +1,6 @@
 <?php
 
-namespace Leantime\Plugins\TaskOrganiser\Services\SortModules;
+namespace Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields;
 
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
@@ -12,7 +12,7 @@ use Leantime\Plugins\CustomFields\Contracts\FieldTypeEnum;
 use Leantime\Core\Configuration\Environment;
 use Leantime\Core\Db\Db;
 
-class CustomFieldsCheckboxSortModule extends BaseSortModule
+class CustomFieldsRadioSortModule extends BaseSortModule
 {
     public string $name;
     public array $map = [];
@@ -35,21 +35,15 @@ class CustomFieldsCheckboxSortModule extends BaseSortModule
         });
         if ($targetFields != null && count($targetFields) > 0){
             $targetField = array_values($targetFields)[0];
-            if ($targetField->type != FieldTypeEnum::CHECKBOX)
+            if ($targetField->type != FieldTypeEnum::RADIO)
                 return 0;
-
             if ($targetField->value != ""){
-                $totalValue = 0;
-                foreach($targetField->value as $value){
-                    if (array_key_exists($value, $this->map)){
-                        $value = $this->map[$value];
-                        if ($value != null){
-                            $totalValue += $value;
-                        }
+                if (array_key_exists($targetField->value, $this->map)){
+                    $value = $this->map[$targetField->value];
+                    if ($value != null){
+                        return $value;
                     }
                 }
-
-                return $totalValue;
             }
         }
 

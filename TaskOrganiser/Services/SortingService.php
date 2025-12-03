@@ -23,11 +23,13 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\StaticSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomFieldsRadioSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomFieldsBoolSortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomFieldsCheckboxSortModule;
+use Leantime\Plugins\TaskOrganiser\Services\SortModules\Strategies\StrategySortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Domain\Setting\Services\Setting as SettingService;
 use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
 use Leantime\Core\Configuration\Environment;
 use Leantime\Core\Db\Db;
+use Leantime\Core\Language;
 
 class SortingService
 {
@@ -40,6 +42,7 @@ class SortingService
 
     private Db $db;
     private Environment $config;
+    private Language $language;
 
     public function __construct(
         TicketService $ticketsService,
@@ -48,6 +51,7 @@ class SortingService
         CacheRepository $cacheRepository,
         Db $db,
         Environment $config,
+        Language $language,
         PluginsManager $pluginsManager,
     ) {
         $this->ticketsService = $ticketsService;
@@ -57,6 +61,7 @@ class SortingService
         $this->pluginsManager = $pluginsManager;
         $this->db = $db;
         $this->config = $config;
+        $this->language = $language;
     }
 
     public function ClearCache(string $id) {
@@ -224,6 +229,12 @@ class SortingService
                             if ($this->isPluginEnalbed($enabledPlugins, "customfields"))
                                 array_push($setting->modules, new CustomFieldsCheckboxSortModule($this->db, $this->config, $moduleSetting));
                             break;
+
+                        // Strategies
+                        case 'strategies_strategy':
+                            if ($this->isPluginEnalbed($enabledPlugins, "strategies"))
+                                array_push($setting->modules, new StrategySortModule($this->db, $this->config, $this->language, $moduleSetting));
+                            break;
                     }
                 }
             }
@@ -263,7 +274,8 @@ class SortingService
         }), 'name');
         $availableplugins = array(
             "common" => true,
-            "customfields" => in_array("Custom Fields", $allEnabledPlugins)
+            "customfields" => in_array("Custom Fields", $allEnabledPlugins),
+            "strategies" => in_array("Leantime Strategies", $allEnabledPlugins)
         );
         return $availableplugins;
     }

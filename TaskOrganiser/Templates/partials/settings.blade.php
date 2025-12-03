@@ -127,6 +127,10 @@
                                         <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', customFields_checkboxDef)"/>
                                         <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', customFields_radioDef)"/>
                                     @endif
+                                    @if(array_key_exists('strategies', $availableplugins) && $availableplugins['strategies'])
+                                        <p>Strategies</p>
+                                        <input type="button" value="Strategy Module" class="btn btn-outline" style="width:80% !important;" onclick="format('newModuleArea', strategies_strategyDef)"/>
+                                    @endif
                                 </div>
                             </ul>
                         </div>
@@ -259,6 +263,10 @@
                                                     <input type="button" value="Bool Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', customFields_boolDef)"/>
                                                     <input type="button" value="Checkbox Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', customFields_checkboxDef)"/>
                                                     <input type="button" value="Radio Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', customFields_radioDef)"/>
+                                                @endif
+                                                @if(array_key_exists('strategies', $availableplugins) && $availableplugins['strategies'])
+                                                    <p>Strategies</p>
+                                                    <input type="button" value="Strategy Module" class="btn btn-outline" style="width:80% !important;" onclick="format('modulearea-{{$setting->id}}', strategies_strategyDef)"/>
                                                 @endif
                                             </div>
                                         </ul>
@@ -435,6 +443,14 @@
         "name":"field_name",
         "map":{
             "value":0
+        }
+    }
+
+    // Strategies
+    strategies_strategyDef = {
+        "type":"strategies_strategy",
+        "map":{
+            "strategy_name":0
         }
     }
 

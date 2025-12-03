@@ -43,6 +43,9 @@
 							<p style="align-content:center;text-align:center;width:10rem">Priority</p>
 							<p style="align-content:center;text-align:center;width:10rem">Effort</p>
 							<p style="align-content:center;text-align:center;width:10rem">Status</p>
+							@if($setting->allowignoring && $setting->persistency > 0)
+								<p style="align-content:center;text-align:center;width:5rem">Actions</p>
+							@endif
 						</div>
 					</div>
 					<div id="ticketOrganiserContainer">
@@ -114,6 +117,24 @@
 											</span>
 										</p>
 									</div>
+
+									@if($setting->allowignoring && $setting->persistency > 0)
+										<div
+											style="align-content:center;text-align:center;width:5rem">
+											<form
+												hx-delete="{{ BASE_URL }}/taskOrganiser/widgetController/ignoreTask"
+												hx-trigger="submit"
+												hx-target="#taskOrganiserBody"
+												hx-swap="innerhtml"
+											>
+												<div class="tw-flex tw-flex-col">
+													<input name="settingId" type="hidden" value="{{$setting->id}}"/>
+													<input name="taskId" type="hidden" value="{{$ticket->id}}"/>
+													<button class="btn btn-outline" style="width:auto !important;">Ignore</button>
+												</div>
+											</form>
+										</div>
+									@endif
 								</div>
 							</div>
 						@endforeach

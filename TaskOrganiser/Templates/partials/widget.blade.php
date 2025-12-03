@@ -57,6 +57,7 @@
 
 									<div style="align-content:center;text-align:center;width:3rem">
 										<span>#{{ $ticket->id }}</span>
+										<span>#{{ $ticket->type }}</span>
 									</div>
 
 									<div class="tw-flex-1 ticket-title ticket-title-wrapper">

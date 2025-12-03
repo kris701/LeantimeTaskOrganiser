@@ -1,6 +1,6 @@
 <?php
 
-namespace Leantime\Plugins\TaskOrganiser\Services\SortModules;
+namespace Leantime\Plugins\TaskOrganiser\Services\SortModules\Common;
 
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;

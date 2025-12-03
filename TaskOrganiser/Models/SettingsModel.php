@@ -14,6 +14,7 @@ class SettingsModel
     public int $order;
     public bool $hideifempty;
     public bool $showweights;
+    public bool $allowignoring;
 
     public bool $includetasks;
     public bool $includesubtasks;
@@ -32,6 +33,7 @@ class SettingsModel
         $this->order = $data->order ?? 0;
         $this->hideifempty = $data->hideifempty ?? false;
         $this->showweights = $data->showweights ?? false;
+        $this->allowignoring = $data->allowignoring ?? false;
 
         $this->includetasks = $data->includetasks ?? true;
         $this->includesubtasks = $data->includesubtasks ?? false;

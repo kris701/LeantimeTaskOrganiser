@@ -151,6 +151,7 @@ class SettingsController extends HtmxController
         $index->indexes[$id]->order = $this->incomingRequest->get("order");
         $index->indexes[$id]->hideifempty = null !== ($this->incomingRequest->get("hideifempty"));
         $index->indexes[$id]->showweights = null !== ($this->incomingRequest->get("showweights"));
+        $index->indexes[$id]->allowignoring = null !== ($this->incomingRequest->get("allowignoring"));
 
         $index->indexes[$id]->includetasks = null !== ($this->incomingRequest->get("includetasks"));
         $index->indexes[$id]->includesubtasks = null !== ($this->incomingRequest->get("includesubtasks"));

@@ -8,6 +8,7 @@ You can use sort modules to order based on values such as Status, Project, Effor
 This plugin also support some of the other Leantime plugins:
 * **Custom Fields**: If you have this plugin, you can use sort modules for Bool, Checkbox and Radio custom fields.
 * **Strategies**: If you have this plugin, you can use sort modules for things like strategy names.
+* **Plans**: If you have this plugin, you can use sort modules for things like plan names.
 
 If you have the Custom Fields plugin, you can also use sort modules for Bool, Checkbox and Radio custom fields.
 

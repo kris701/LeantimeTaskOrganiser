@@ -1,20 +1,20 @@
 <?php
 
-namespace Leantime\Plugins\TaskOrganiser\Services\SortModules\Strategies;
+namespace Leantime\Plugins\TaskOrganiser\Services\SortModules\Plans;
 
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\BaseSortModule;
 use Leantime\Domain\Tickets\Models\Tickets as TicketModel;
 
-use Leantime\Plugins\StrategyPro\Repositories\StrategyPro as StrategyRepository;
+use Leantime\Plugins\PgmPro\Repositories\Programs as PlansRepository;
 
 use Leantime\Core\Configuration\Environment;
 use Leantime\Core\Db\Db;
 use Leantime\Core\Language;
 
-class StrategySortModule extends BaseSortModule
+class PlanSortModule extends BaseSortModule
 {
     public array $map = [];
-    private StrategyRepository $strategyRepository;
+    private PlansRepository $plansRepository;
 
     public function __construct(
         Db $db,
@@ -22,17 +22,17 @@ class StrategySortModule extends BaseSortModule
         Language $language,
         $data
     ) {
-        $this->strategyRepository = new StrategyRepository(
+        $this->plansRepository = new PlansRepository(
             $config,
             $db,
             $language
         );
 
         $strategyMap = get_object_vars($data->map);
-        $projects = $this->strategyRepository->getAll();        
+        $projects = $this->plansRepository->getAll();        
         $newStrategyMap = [];
         foreach($projects as $project){
-            if ($project["menuType"] != "strategy")
+            if ($project["menuType"] != "program")
                 continue;
             if (array_key_exists($project['name'], $strategyMap))
                 $newStrategyMap[$project['id']] = $strategyMap[$project['name']];

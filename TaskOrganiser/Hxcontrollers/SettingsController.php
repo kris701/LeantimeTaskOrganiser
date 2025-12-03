@@ -121,7 +121,8 @@ class SettingsController extends HtmxController
         $this->tpl->assign('availableplugins', array(
             "common" => true,
             "customfields" => in_array("Custom Fields", $allEnabledPlugins),
-            "strategies" => in_array("Leantime Strategies", $allEnabledPlugins)
+            "strategies" => in_array("Leantime Strategies", $allEnabledPlugins),
+            "plans" => in_array("Program Plans", $allEnabledPlugins)
         ));
     }
 

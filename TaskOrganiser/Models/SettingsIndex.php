@@ -37,7 +37,8 @@ class SettingsIndex
         $this->indexes = [];
         if ($values->indexes != null){
             foreach($values->indexes as $index){
-                array_push($this->indexes, new SettingsModel($index));
+                $model = new SettingsModel($index);
+                $this->indexes[$model->id] = $model;
             }
         }
     }

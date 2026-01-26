@@ -26,7 +26,7 @@ use Leantime\Plugins\TaskOrganiser\Services\SortModules\CustomFields\CustomField
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\Strategies\StrategySortModule;
 use Leantime\Plugins\TaskOrganiser\Services\SortModules\Plans\PlanSortModule;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
-use Leantime\Domain\Setting\Services\Setting as SettingService;
+use Leantime\Plugins\TaskOrganiser\Services\SettingsService;
 use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
 use Leantime\Core\Configuration\Environment;
 use Leantime\Core\Db\Db;
@@ -35,7 +35,7 @@ use Leantime\Core\Language;
 class SortingService
 {
     private TicketService $ticketsService;
-    private SettingService $settingsService;
+    private SettingsService $settingsService;
     private ProjectService $projectsService;
     private PluginsManager $pluginsManager;
     
@@ -47,7 +47,7 @@ class SortingService
 
     public function __construct(
         TicketService $ticketsService,
-        SettingService $settingsService,
+        SettingsService $settingsService,
         ProjectService $projectsService,
         CacheRepository $cacheRepository,
         Db $db,
@@ -65,20 +65,26 @@ class SortingService
         $this->language = $language;
     }
 
-    public function ClearCache(string $id) {
-        $userId = session('userdata.id');
+    /**
+     * Reset the cache for a specific user and a specific task list
+     * @api
+     */
+    public function ClearCache(string $id, string $userId) {
         $cacheKey = "user.{$userId}.{$id}";
         $this->cacheRepository->deleteCache($cacheKey);
     }
 
-    public function Calculate() : array {
-        $userId = session('userdata.id');
+    /**
+     * Calculate all the task lists for a user
+     * @api
+     */
+    public function Calculate(string $userId) : array {
         $searchCriteria = array(
             "type"=>"task,subtask,bug",
             "users"=>$userId
         );
         $tasks = $this->ticketsService->getAll($searchCriteria);
-        $settings = $this->GetSettings();
+        $settings = $this->GetSettings($userId);
 
         $tickets = array();
 
@@ -141,7 +147,7 @@ class SortingService
         return $tickets;
     }
 
-    function CalculateTaskList(array $tasks, object $setting){
+    private function CalculateTaskList(array $tasks, object $setting){
         $settingResult = [];
         foreach($tasks as $task){
             $newTask = new TicketModel($task);
@@ -158,11 +164,30 @@ class SortingService
         return array_slice($settingResult, 0, $setting->maxtasks);
     }
 
-    function GetSettings() : SettingsIndex {
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settings = new SettingsIndex($settingDataStr);
+    public function GetCacheExpirations(string $userId) : array {
+        $settings = $this->settingsService->GetSettingsIndex($userId);
+
+        $expirations = [];
+
+        foreach($settings->indexes as $setting){
+            $cacheKey = "user.{$userId}.{$setting->id}";
+            if ($setting->persistency > 0){
+                $cache = $this->cacheRepository->getCache($cacheKey);
+                if ($cache){
+                    $expirations[$setting->id] = $cache->expires;
+                }
+                else
+                    $expirations[$setting->id] = "Always";
+            }
+            else
+                $expirations[$setting->id] = "Always";
+        }
+
+        return $expirations;
+    }
+
+    private function GetSettings($userId) : SettingsIndex {
+        $settings = $this->settingsService->GetSettingsIndex($userId);
         $enabledPlugins = $this->getEnabledPlugins();
 
         foreach($settings->indexes as $setting){
@@ -248,31 +273,6 @@ class SortingService
         }
 
         return $settings;
-    }
-
-    function GetCacheExpirations() : array {
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settings = new SettingsIndex($settingDataStr);
-
-        $expirations = [];
-
-        foreach($settings->indexes as $setting){
-            $cacheKey = "user.{$userId}.{$setting->id}";
-            if ($setting->persistency > 0){
-                $cache = $this->cacheRepository->getCache($cacheKey);
-                if ($cache){
-                    $expirations[$setting->id] = $cache->expires;
-                }
-                else
-                    $expirations[$setting->id] = "Always";
-            }
-            else
-                $expirations[$setting->id] = "Always";
-        }
-
-        return $expirations;
     }
 
     private function getEnabledPlugins() : array{

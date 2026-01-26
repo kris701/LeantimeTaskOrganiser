@@ -148,16 +148,16 @@
 <script>
     jQuery(document).ready(function() {
 		var expirations = <?php echo json_encode($expirations); ?>;
-		var index = 0;
-		expirations.forEach(x => {
-			var targetId = "expiration-" + index;
+		Object.keys(expirations).forEach(x => {
+			var targetId = "expiration-" + x;
 			var element = document.getElementById(targetId);
-			var date = new Date(Date.parse(x));
-			if (date != "Invalid Date")
-				element.innerText = date.toLocaleString();
-			else
-				element.innerText = x;
-			index++;
+			if (element){
+				var date = new Date(Date.parse(expirations[x]));
+				if (date != "Invalid Date")
+					element.innerText = date.toLocaleString();
+				else
+					element.innerText = expirations[x];
+			}
 		})
     });
 </script>

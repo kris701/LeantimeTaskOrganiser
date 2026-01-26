@@ -3,10 +3,9 @@
 namespace Leantime\Plugins\TaskOrganiser\Hxcontrollers;
 
 use Leantime\Core\Controller\HtmxController;
-use Leantime\Domain\Setting\Services\Setting as SettingService;
+use Leantime\Plugins\TaskOrganiser\Services\SettingsService;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsModel;
 use Leantime\Plugins\TaskOrganiser\Models\SettingsIndex;
-use Leantime\Domain\Projects\Services\Projects as ProjectService;
 use Leantime\Plugins\TaskOrganiser\Repositories\CacheRepository;
 use Leantime\Domain\Plugins\Services\Plugins as PluginsManager;
 
@@ -14,25 +13,22 @@ class SettingsController extends HtmxController
 {
     protected static string $view = 'taskorganiser::partials.settings';
 
-    private ProjectService $projectsService;
-    private SettingService $settingsService;
+    private SettingsService $settingsService;
     private PluginsManager $pluginsManager;
     private CacheRepository $cacheRepository;
 
     public function init(
-        ProjectService $projectsService,
-        SettingService $settingsService,
+        SettingsService $settingsService,
         PluginsManager $pluginsManager,
         CacheRepository $cacheRepository,
     ) {
-        $this->projectsService = $projectsService;
         $this->settingsService = $settingsService;
         $this->pluginsManager = $pluginsManager;
         $this->cacheRepository = $cacheRepository;
     }
 	
 	public function get(){
-        $settingsIndex = $this->GetSettingsIndex();
+        $settingsIndex = $this->settingsService->GetSettingsIndex(session('userdata.id'));
         
         usort($settingsIndex->indexes, function($a, $b) { return $b->order - $a->order; });
 
@@ -42,24 +38,28 @@ class SettingsController extends HtmxController
 	}
 
     public function add(){
-        $settingsIndex = $this->GetSettingsIndex();
+        $userId = session('userdata.id');
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
 
-        $id = max(array_map( function($v) { return $v->id; } ,$settingsIndex->indexes)) + 1;
+        $id = 0;
+        if (count($settingsIndex->indexes) > 0)
+            $id = max(array_map( function($v) { return $v->id; } ,$settingsIndex->indexes)) + 1;
         $settingsIndex->indexes[$id] = new SettingsModel(array());
         $settingsIndex->indexes[$id]->id = $id;
 
-        $this->SetSettingsDataByRequest($settingsIndex);
-        $this->SaveSettingsIndex($settingsIndex);
+        $this->SetSettingsDataByRequest($settingsIndex, $id);
+        $this->settingsService->SetSettingsIndex($settingsIndex, $userId);
         
         $this->tpl->setNotification("Task list added!", 'success');
         $this->get();
     }
 
     public function save(){
-        $settingsIndex = $this->GetSettingsIndex();
-        $this->SetSettingsDataByRequest($settingsIndex);
+        $userId = session('userdata.id');
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
+        $this->SetSettingsDataByRequest($settingsIndex, $this->incomingRequest->get("id"));
         $this->ClearCache();
-        $this->SaveSettingsIndex($settingsIndex);
+        $this->settingsService->SetSettingsIndex($settingsIndex, $userId);
         
         $this->tpl->setNotification("Task list saved!", 'success');
         $this->get();
@@ -67,10 +67,11 @@ class SettingsController extends HtmxController
 
     public function delete(){
         $id = $this->incomingRequest->get("id");
+        $userId = session('userdata.id');
 
-        $settingsIndex = $this->GetSettingsIndex();
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
         unset($settingsIndex->indexes[$id]);
-        $this->SaveSettingsIndex($settingsIndex);
+        $this->settingsService->SetSettingsIndex($settingsIndex, $userId);
         
         $this->tpl->setNotification("Task list deleted!", 'success');
         $this->get();
@@ -79,41 +80,51 @@ class SettingsController extends HtmxController
     public function export(){
         $id = $this->incomingRequest->get("id");
 
-        $settingsIndex = $this->GetSettingsIndex();
+        $settingsIndex = $this->settingsService->GetSettingsIndex(session('userdata.id'));
 
         $this->get();
+        $this->tpl->setNotification("Task list exported!", 'success');
         $this->tpl->assign('exportData', json_encode($settingsIndex->indexes[$id]));
     }
 
     public function importFile(){
+        $userId = session('userdata.id');
         $targetFile = $_FILES['file'];
         $text = file_get_contents($targetFile["tmp_name"]);
         $object = json_decode($text);
         
-        $settingsIndex = $this->GetSettingsIndex();
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
 
-        $maxId = max(array_column($settingsIndex->indexes, 'id'));
-        $object->id = $maxId + 1;
+        $newId = 0;
+        if (count($settingsIndex->indexes) > 0){
+            $newId = max(array_column($settingsIndex->indexes, 'id')) + 1;
+        }
+        $object->id = $newId;
 
         $settingsIndex->indexes[$object->id] = $object;
 
-        $this->SaveSettingsIndex($settingsIndex);
+        $this->settingsService->SetSettingsIndex($settingsIndex, $userId);
 
+        $this->tpl->setNotification("Task list imported!", 'success');
         $this->get();
     }
 
     public function import(){
         $text = $this->incomingRequest->get("data");
         $object = json_decode($text);
-        
-        $settingsIndex = $this->GetSettingsIndex();
+        $userId = session('userdata.id');
 
-        $maxId = max(array_column($settingsIndex->indexes, 'id'));
-        $object->id = $maxId + 1;
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
+
+        $newId = 0;
+        if (count($settingsIndex->indexes) > 0){
+            $newId = max(array_column($settingsIndex->indexes, 'id')) + 1;
+        }
+        $object->id = $newId;
 
         $settingsIndex->indexes[$object->id] = $object;
 
-        $this->SaveSettingsIndex($settingsIndex);
+        $this->settingsService->SetSettingsIndex($settingsIndex, $userId);
 
         $this->get();
     }
@@ -130,22 +141,7 @@ class SettingsController extends HtmxController
         ));
     }
 
-    private function GetSettingsIndex() : SettingsIndex{
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
-        return $settingsIndex;
-    }
-
-    private function SaveSettingsIndex(SettingsIndex $index){
-        $userId = session('userdata.id');
-        $sortingKey = "user.{$userId}.taskorganisersettings";
-        $this->settingsService->saveSetting($sortingKey, $index->Serialize());
-    }
-
-    private function SetSettingsDataByRequest(SettingsIndex $index){
-        $id = $this->incomingRequest->get("id");
+    private function SetSettingsDataByRequest(SettingsIndex $index, string $id){
         $index->indexes[$id]->name = $this->incomingRequest->get("name");
         $index->indexes[$id]->subtitle = $this->incomingRequest->get("subtitle");
 

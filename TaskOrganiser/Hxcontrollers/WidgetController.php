@@ -3,7 +3,7 @@
 namespace Leantime\Plugins\TaskOrganiser\Hxcontrollers;
 
 use Leantime\Core\Controller\HtmxController;
-use Leantime\Domain\Setting\Services\Setting;
+use Leantime\Plugins\TaskOrganiser\Services\SettingsService;
 use Leantime\Domain\Tickets\Services\Tickets as TicketService;
 use Leantime\Plugins\TaskOrganiser\Services\SortingService;
 use Leantime\Domain\Projects\Services\Projects as ProjectService;
@@ -16,13 +16,13 @@ class WidgetController extends HtmxController
 
     private TicketService $ticketsService;
     private SortingService $sortingService;
-    private Setting $settingsService;
+    private SettingsService $settingsService;
     private CacheRepository $cacheRepository;
 
     public function init(
         TicketService $ticketsService,
         SortingService $sortingService,
-        Setting $settingsService,
+        SettingsService $settingsService,
         CacheRepository $cacheRepository,
     ) {
         $this->ticketsService = $ticketsService;
@@ -39,8 +39,8 @@ class WidgetController extends HtmxController
 
     public function clearCache(){
         $id = $this->incomingRequest->get("id");
-
-        $this->sortingService->clearCache($id);
+        
+        $this->sortingService->clearCache($id, session('userdata.id'));
         $this->GetData();
     }
 
@@ -50,8 +50,7 @@ class WidgetController extends HtmxController
 
         $userId = session('userdata.id');
         $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
         $setting = $settingsIndex->indexes[$settingId];
 
         if ($setting != null && $setting->allowignoring == true){
@@ -68,16 +67,16 @@ class WidgetController extends HtmxController
             }
         }
 
+        $this->tpl->setNotification("Task ignored!", 'success');
         $this->GetData();
     }
 
     private function GetData(){
         $userId = session('userdata.id');
-        $tasks = $this->sortingService->Calculate();
+        $tasks = $this->sortingService->Calculate($userId);
 
         $sortingKey = "user.{$userId}.taskorganisersettings";
-        $settingDataStr = $this->settingsService->getSetting($sortingKey);
-        $settingsIndex = new SettingsIndex($settingDataStr);
+        $settingsIndex = $this->settingsService->GetSettingsIndex($userId);
 
         $indexes = array_filter($settingsIndex->indexes, function($v) use($tasks){
             if (count($tasks[$v->id]) == 0 && $v->hideifempty == true)
@@ -93,6 +92,6 @@ class WidgetController extends HtmxController
 		$this->tpl->assign('statusLabels', $this->ticketsService->getAllStatusLabelsByUserId($userId));
 		$this->tpl->assign('effortLabels', $this->ticketsService->getEffortLabels());
 		$this->tpl->assign('priorityLabels', $this->ticketsService->getPriorityLabels());
-		$this->tpl->assign('expirations', $this->sortingService->GetCacheExpirations());
+		$this->tpl->assign('expirations', $this->sortingService->GetCacheExpirations($userId));
     }
 }

@@ -10,7 +10,7 @@ This plugin also support some of the other Leantime plugins:
 * **Strategies**: If you have this plugin, you can use sort modules for things like strategy names.
 * **Plans**: If you have this plugin, you can use sort modules for things like plan names.
 
-If you have the Custom Fields plugin, you can also use sort modules for Bool, Checkbox and Radio custom fields.
+Compatible with Leantime v3.6.0.
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/a3020fce-2199-4fe6-b6b5-20a583795385" />
 
@@ -38,6 +38,15 @@ There are a couple of fields that you can modify there:
     - **Use bugs**: If the list should consider bugs
 * **Modules**
     - A JSON file with the configurations for the modules
+
+## API
+You can interact with the widget by using the JsonRPC API that Leantime uses.
+The methods you can use are:
+* `leantime.rpc.TaskOrganiser.SettingsService.GetSettingsIndex` To get settings for a given user.
+* `leantime.rpc.TaskOrganiser.SettingsService.SetSettingsIndex` To set settings for a given user.
+* `leantime.rpc.TaskOrganiser.SortingService.Calculate` To get all the task lists for a given user.
+* `leantime.rpc.TaskOrganiser.SortingService.ClearCache` To clear the cache for a given task list.
+* `leantime.rpc.TaskOrganiser.SortingService.GetCacheExpirations` To get how long a given lists cache is valid.
 
 ## Installation
 To install this plugin, simply download the latest release ZIP file under releases and unzip it into the Leantime plugin folder.

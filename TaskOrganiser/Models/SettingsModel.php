@@ -4,7 +4,7 @@ namespace Leantime\Plugins\TaskOrganiser\Models;
 
 class SettingsModel
 {
-    public int $id;
+    public string $id;
     public string $name;
     public string $subtitle;
 
@@ -23,7 +23,7 @@ class SettingsModel
     public $modules = array();
 
     public function __construct($data){
-        $this->id = $data->id ?? 0;
+        $this->id = $data->id ?? '0';
         $this->name = $data->name ?? '';
         $this->subtitle = $data->subtitle ?? '';
 
